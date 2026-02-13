@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 const LOGO_B64 =
-  "data:image/png;base64,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";
+  "data:image/png;base64,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";
 
-// ═══ SVG ICONS (professional, no emojis) ═══
+// ═══ SVG ICONS ═══
 const I = {
-  car: (c = "#fff", s = 16) => (
+  car: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -22,7 +22,7 @@ const I = {
       <path d="M5 12h14" />
     </svg>
   ),
-  clock: (c = "#fff", s = 16) => (
+  clock: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -37,7 +37,7 @@ const I = {
       <path d="M12 6v6l4 2" />
     </svg>
   ),
-  check: (c = "#fff", s = 16) => (
+  check: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -51,7 +51,7 @@ const I = {
       <path d="M20 6L9 17l-5-5" />
     </svg>
   ),
-  shield: (c = "#fff", s = 16) => (
+  shield: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -65,7 +65,7 @@ const I = {
       <path d="M12 2l7 4v5c0 5-3.5 9.74-7 11-3.5-1.26-7-6-7-11V6l7-4z" />
     </svg>
   ),
-  pen: (c = "#fff", s = 16) => (
+  pen: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -80,7 +80,7 @@ const I = {
       <path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
     </svg>
   ),
-  chart: (c = "#fff", s = 16) => (
+  chart: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -96,7 +96,7 @@ const I = {
       <path d="M6 20v-6" />
     </svg>
   ),
-  send: (c = "#fff", s = 16) => (
+  send: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -111,7 +111,7 @@ const I = {
       <path d="M22 2l-7 20-4-9-9-4 20-7z" />
     </svg>
   ),
-  users: (c = "#fff", s = 16) => (
+  users: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -128,7 +128,7 @@ const I = {
       <path d="M16 3.13a4 4 0 010 7.75" />
     </svg>
   ),
-  user: (c = "#fff", s = 16) => (
+  user: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -143,7 +143,7 @@ const I = {
       <circle cx="12" cy="7" r="4" />
     </svg>
   ),
-  tag: (c = "#fff", s = 16) => (
+  tag: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -158,7 +158,7 @@ const I = {
       <circle cx="7" cy="7" r="1" />
     </svg>
   ),
-  home: (c = "#fff", s = 16) => (
+  home: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -172,7 +172,7 @@ const I = {
       <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
     </svg>
   ),
-  plus: (c = "#fff", s = 16) => (
+  plus: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -186,7 +186,7 @@ const I = {
       <path d="M12 5v14M5 12h14" />
     </svg>
   ),
-  cal: (c = "#fff", s = 16) => (
+  cal: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -201,7 +201,7 @@ const I = {
       <path d="M16 2v4M8 2v4M3 10h18" />
     </svg>
   ),
-  trend: (c = "#fff", s = 16) => (
+  trend: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -216,7 +216,7 @@ const I = {
       <path d="M17 6h6v6" />
     </svg>
   ),
-  mail: (c = "#fff", s = 16) => (
+  mail: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -231,7 +231,7 @@ const I = {
       <path d="M22 7l-10 7L2 7" />
     </svg>
   ),
-  alert: (c = "#fff", s = 16) => (
+  alert: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -246,7 +246,7 @@ const I = {
       <path d="M12 9v4M12 17h.01" />
     </svg>
   ),
-  dollar: (c = "#fff", s = 16) => (
+  dollar: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -260,7 +260,7 @@ const I = {
       <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
     </svg>
   ),
-  x: (c = "#fff", s = 16) => (
+  x: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -274,7 +274,7 @@ const I = {
       <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   ),
-  cam: (c = "#fff", s = 16) => (
+  cam: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -289,7 +289,7 @@ const I = {
       <circle cx="12" cy="13" r="4" />
     </svg>
   ),
-  grid: (c = "#fff", s = 16) => (
+  grid: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -306,7 +306,7 @@ const I = {
       <rect x="14" y="14" width="7" height="7" />
     </svg>
   ),
-  arrow: (c = "#fff", s = 16) => (
+  arrow: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -320,12 +320,12 @@ const I = {
       <path d="M5 12h14M12 5l7 7-7 7" />
     </svg>
   ),
-  dot: (c = "#30d158", s = 8) => (
+  dot: (c = "#22c55e", s = 8) => (
     <svg width={s} height={s}>
       <circle cx={s / 2} cy={s / 2} r={s / 2} fill={c} />
     </svg>
   ),
-  link: (c = "#fff", s = 16) => (
+  link: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -340,7 +340,7 @@ const I = {
       <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
     </svg>
   ),
-  hourglass: (c = "#fff", s = 16) => (
+  hourglass: (c = "#333", s = 16) => (
     <svg
       width={s}
       height={s}
@@ -354,9 +354,55 @@ const I = {
       <path d="M6 2h12M6 22h12M6 2v6l6 4-6 4v6M18 2v6l-6 4 6 4v6" />
     </svg>
   ),
+  arrowUp: (c = "#22c55e", s = 16) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={c}
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  ),
+  arrowDown: (c = "#ef4444", s = 16) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={c}
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 5v14M19 12l-7 7-7-7" />
+    </svg>
+  ),
+  report: (c = "#333", s = 16) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+      <polyline points="14,2 14,8 20,8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10,9 9,9 8,9" />
+    </svg>
+  ),
 };
 
-// ═══ INVENTORY with days on lot ═══
+// ═══ INVENTORY ═══
 const INVENTORY = [
   {
     id: 1,
@@ -614,6 +660,18 @@ const SP = [
   { id: 4, name: "Aaliyah Patel", initials: "AP", active: false },
 ];
 
+// ═══ COMMISSION STRUCTURE ═══
+const COMMISSION_TIERS = [
+  { min: 0, max: 4, rate: 0.2, label: "0–4 cars", bonus: 0 },
+  { min: 5, max: 9, rate: 0.22, label: "5–9 cars", bonus: 250 },
+  { min: 10, max: 14, rate: 0.25, label: "10–14 cars", bonus: 500 },
+  { min: 15, max: 999, rate: 0.3, label: "15+ cars", bonus: 1000 },
+];
+const getCommTier = (sold) =>
+  COMMISSION_TIERS.find((t) => sold >= t.min && sold <= t.max) ||
+  COMMISSION_TIERS[0];
+const AVG_GROSS_PER_CAR = 2800;
+
 function genHistory() {
   const names = [
     "James Mitchell",
@@ -651,7 +709,7 @@ function genHistory() {
   );
   const drives = [];
   let id = 1;
-  for (let d = 30; d >= 0; d--) {
+  for (let d = 60; d >= 0; d--) {
     const date = new Date();
     date.setDate(date.getDate() - d);
     const ds = date.toLocaleDateString("en-US", {
@@ -659,7 +717,7 @@ function genHistory() {
       day: "numeric",
       year: "numeric",
     });
-    const count = d === 0 ? 2 : Math.floor(Math.random() * 4) + 1;
+    const count = d === 0 ? 3 : Math.floor(Math.random() * 4) + 1;
     for (let j = 0; j < count; j++) {
       const ni = (id - 1) % names.length,
         vi = (id * 7) % INVENTORY.length,
@@ -669,7 +727,7 @@ function genHistory() {
       const hr = 9 + Math.floor(Math.random() * 7),
         mn = Math.floor(Math.random() * 4) * 15;
       const timeIn = `${hr > 12 ? hr - 12 : hr}:${String(mn).padStart(2, "0")} ${hr >= 12 ? "PM" : "AM"}`;
-      const isActive = d === 0 && j === count - 1;
+      const isActive = d === 0 && j >= count - 2;
       const outMn = mn + 20 + Math.floor(Math.random() * 25);
       const timeOut = isActive
         ? null
@@ -710,31 +768,33 @@ function genHistory() {
 
 const fmt = (p) => (p ? "$" + p.toLocaleString() : "Call");
 const dolAge = (d) =>
-  d >= 90 ? C.red : d >= 60 ? "#ff9f0a" : d >= 30 ? C.accent : C.green;
+  d >= 90 ? C.red : d >= 60 ? "#f59e0b" : d >= 30 ? C.accent : C.green;
 const dolLabel = (d) =>
   d >= 90 ? "Critical" : d >= 60 ? "Aging" : d >= 30 ? "Watch" : "Fresh";
 
+// ═══ WHITE THEME ═══
 const C = {
-  bg: "#050507",
-  surface: "#0c0c10",
-  surfaceLight: "#141418",
-  border: "rgba(255,255,255,0.06)",
-  borderLight: "rgba(255,255,255,0.1)",
-  text: "#f5f5f7",
-  textMuted: "#8e8e93",
-  textDim: "#555",
+  bg: "#ffffff",
+  surface: "#f8f9fb",
+  surfaceLight: "#f1f3f5",
+  border: "rgba(0,0,0,0.08)",
+  borderLight: "rgba(0,0,0,0.12)",
+  text: "#1a1a2e",
+  textMuted: "#6b7280",
+  textDim: "#9ca3af",
   accent: "#c94050",
   accentHover: "#b3384a",
-  accentLight: "#d4606e",
-  green: "#30d158",
-  red: "#ff453a",
-  blue: "#0a84ff",
-  purple: "#bf5af2",
-  amber: "#ff9f0a",
+  accentLight: "#fde8eb",
+  green: "#16a34a",
+  red: "#ef4444",
+  blue: "#2563eb",
+  purple: "#7c3aed",
+  amber: "#f59e0b",
   glass: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.06)",
+    background: "#ffffff",
+    border: "1px solid rgba(0,0,0,0.08)",
     borderRadius: 14,
+    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
   },
   gradText: {
     background: "linear-gradient(135deg, #c94050, #e8788a)",
@@ -743,6 +803,29 @@ const C = {
   },
 };
 
+// ═══ MONTH UTILS ═══
+const getMonthKey = (dateStr) => {
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+};
+const getMonthLabel = (key) => {
+  const [y, m] = key.split("-");
+  return new Date(parseInt(y), parseInt(m) - 1).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+};
+const getCurrentMonthKey = () => {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}`;
+};
+const getAvailableMonths = (td) => {
+  const set = new Set();
+  td.forEach((t) => set.add(getMonthKey(t.date)));
+  return Array.from(set).sort().reverse();
+};
+
+// ═══ COMPONENTS ═══
 function Badge({ children, color = C.accent, sm }) {
   return (
     <span
@@ -765,6 +848,7 @@ function Badge({ children, color = C.accent, sm }) {
     </span>
   );
 }
+
 function Num({ end, prefix = "", suffix = "" }) {
   const [v, setV] = useState(0);
   useEffect(() => {
@@ -787,14 +871,15 @@ function Num({ end, prefix = "", suffix = "" }) {
     </span>
   );
 }
-function Stat({ label, value, prefix, suffix, color = C.accent, icon }) {
+
+function Stat({ label, value, prefix, suffix, color = C.accent, icon, sub }) {
   return (
     <div
       style={{
         ...C.glass,
         padding: "16px 18px",
-        flex: "1 1 calc(50% - 8px)",
-        minWidth: 0,
+        flex: "1 1 calc(25% - 12px)",
+        minWidth: 140,
       }}
     >
       <div
@@ -828,9 +913,15 @@ function Stat({ label, value, prefix, suffix, color = C.accent, icon }) {
       >
         <Num end={value} prefix={prefix || ""} suffix={suffix || ""} />
       </div>
+      {sub && (
+        <div style={{ fontSize: 11, color: C.textMuted, marginTop: 6 }}>
+          {sub}
+        </div>
+      )}
     </div>
   );
 }
+
 function Logo({ size = 32 }) {
   return (
     <img
@@ -843,6 +934,268 @@ function Logo({ size = 32 }) {
         objectFit: "cover",
       }}
     />
+  );
+}
+
+// ═══ MONTH COMPARISON WIDGET ═══
+function MonthComparison({ td, currentMonth }) {
+  const months = getAvailableMonths(td);
+  const [compareMonth, setCompareMonth] = useState(() => {
+    const idx = months.indexOf(currentMonth);
+    return months[idx + 1] || months[0];
+  });
+
+  const getCounts = (mk) => {
+    const filtered = td.filter((t) => getMonthKey(t.date) === mk);
+    return {
+      drives: filtered.length,
+      sold: filtered.filter((t) => t.outcome === "sold").length,
+      closeRate: filtered.length
+        ? Math.round(
+            (filtered.filter((t) => t.outcome === "sold").length /
+              filtered.length) *
+              100,
+          )
+        : 0,
+      crm: filtered.filter((t) => t.adfSent).length,
+    };
+  };
+
+  const curr = getCounts(currentMonth);
+  const comp = getCounts(compareMonth);
+
+  const delta = (a, b) => {
+    if (b === 0) return a > 0 ? 100 : 0;
+    return Math.round(((a - b) / b) * 100);
+  };
+
+  const DeltaBadge = ({ val }) => {
+    const d = val;
+    const up = d >= 0;
+    return (
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 2,
+          fontSize: 11,
+          fontWeight: 700,
+          color: up ? C.green : C.red,
+        }}
+      >
+        {up ? I.arrowUp(C.green, 12) : I.arrowDown(C.red, 12)}
+        {Math.abs(d)}%
+      </span>
+    );
+  };
+
+  return (
+    <div style={{ ...C.glass, padding: 22, marginBottom: 20 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 16,
+          flexWrap: "wrap",
+          gap: 10,
+        }}
+      >
+        <div style={{ fontSize: 15, fontWeight: 700 }}>
+          Month-over-Month Comparison
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 12, color: C.textMuted }}>
+            Compare with:
+          </span>
+          <select
+            value={compareMonth}
+            onChange={(e) => setCompareMonth(e.target.value)}
+            style={{
+              padding: "6px 10px",
+              borderRadius: 8,
+              border: `1px solid ${C.border}`,
+              background: C.surface,
+              color: C.text,
+              fontSize: 12,
+              fontFamily: "'Outfit',sans-serif",
+              cursor: "pointer",
+            }}
+          >
+            {months
+              .filter((m) => m !== currentMonth)
+              .map((m) => (
+                <option key={m} value={m}>
+                  {getMonthLabel(m)}
+                </option>
+              ))}
+          </select>
+        </div>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+          gap: 12,
+        }}
+      >
+        {[
+          { label: "Test Drives", curr: curr.drives, comp: comp.drives },
+          { label: "Cars Sold", curr: curr.sold, comp: comp.sold },
+          {
+            label: "Close Rate",
+            curr: curr.closeRate,
+            comp: comp.closeRate,
+            suffix: "%",
+          },
+          { label: "CRM Leads", curr: curr.crm, comp: comp.crm },
+        ].map((item) => (
+          <div
+            key={item.label}
+            style={{
+              padding: 14,
+              borderRadius: 12,
+              background: C.surface,
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 9,
+                color: C.textDim,
+                textTransform: "uppercase",
+                letterSpacing: 1,
+                fontWeight: 600,
+                marginBottom: 6,
+              }}
+            >
+              {item.label}
+            </div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: C.text }}>
+              {item.curr}
+              {item.suffix || ""}
+            </div>
+            <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
+              vs {item.comp}
+              {item.suffix || ""}
+            </div>
+            <div style={{ marginTop: 6 }}>
+              <DeltaBadge val={delta(item.curr, item.comp)} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ═══ SALESPERSON BAR CHART ═══
+function SalespersonBarChart({ td, monthKey }) {
+  const filtered = td.filter((t) => getMonthKey(t.date) === monthKey);
+  const data = SP.map((s) => {
+    const d = filtered.filter((t) => t.salesId === s.id);
+    return {
+      ...s,
+      drives: d.length,
+      sold: d.filter((t) => t.outcome === "sold").length,
+    };
+  }).sort((a, b) => b.drives - a.drives);
+  const maxVal = Math.max(...data.map((d) => d.drives), 1);
+
+  return (
+    <div style={{ ...C.glass, padding: 24 }}>
+      <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 20 }}>
+        Salesperson Breakdown — {getMonthLabel(monthKey)}
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        {data.map((s) => (
+          <div key={s.id}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: 6,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 8,
+                    background: C.accent + "14",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    color: C.accent,
+                  }}
+                >
+                  {s.initials}
+                </div>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>{s.name}</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 12,
+                  alignItems: "center",
+                  fontSize: 12,
+                }}
+              >
+                <span style={{ color: C.textMuted }}>{s.drives} drives</span>
+                <span style={{ fontWeight: 700, color: C.green }}>
+                  {s.sold} sold
+                </span>
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 4,
+                height: 24,
+                borderRadius: 6,
+                overflow: "hidden",
+                background: C.surface,
+              }}
+            >
+              <div
+                style={{
+                  width: `${(s.drives / maxVal) * 100}%`,
+                  background: `linear-gradient(90deg, ${C.accent}, ${C.accent}bb)`,
+                  borderRadius: 6,
+                  minWidth: s.drives > 0 ? 4 : 0,
+                  transition: "width 0.6s ease",
+                  position: "relative",
+                }}
+              >
+                {s.sold > 0 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: `${(s.sold / s.drives) * 100}%`,
+                      background: C.green,
+                      borderRadius: "6px 0 0 6px",
+                      minWidth: 4,
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+              <span style={{ fontSize: 10, color: C.green }}>■ Sold</span>
+              <span style={{ fontSize: 10, color: C.accent }}>
+                ■ Test Drives
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -865,7 +1218,7 @@ function LiveTimer({ startTimestamp }) {
       ? `${hrs}h ${String(mins).padStart(2, "0")}m ${String(secs).padStart(2, "0")}s`
       : `${mins}m ${String(secs).padStart(2, "0")}s`;
   const color =
-    elapsed > 45 * 60 ? C.red : elapsed > 30 * 60 ? "#ff9f0a" : C.green;
+    elapsed > 45 * 60 ? C.red : elapsed > 30 * 60 ? "#f59e0b" : C.green;
   return (
     <span
       style={{
@@ -881,7 +1234,7 @@ function LiveTimer({ startTimestamp }) {
   );
 }
 
-// ═══ EMAIL ALERT TOAST ═══
+// ═══ ALERT TOAST ═══
 function AlertToast({ alerts, onDismiss }) {
   if (!alerts.length) return null;
   return (
@@ -901,14 +1254,14 @@ function AlertToast({ alerts, onDismiss }) {
         <div
           key={i}
           style={{
-            background: "#1a1a1e",
+            background: "#fff",
             border: `1px solid ${C.amber}44`,
             borderRadius: 12,
             padding: "14px 18px",
             display: "flex",
             alignItems: "flex-start",
             gap: 12,
-            boxShadow: `0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px ${C.amber}22`,
+            boxShadow: `0 8px 32px rgba(0,0,0,0.12)`,
           }}
         >
           <div style={{ marginTop: 2 }}>{I.mail(C.amber, 18)}</div>
@@ -940,6 +1293,308 @@ function AlertToast({ alerts, onDismiss }) {
           </button>
         </div>
       ))}
+    </div>
+  );
+}
+
+// ═══ TODAY'S TEST DRIVES HERO ═══
+function TodayTestDrives({ td, setTD }) {
+  const todayStr = new Date().toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+  const active = td.filter((t) => t.status === "active");
+  const todayCompleted = td.filter(
+    (t) => t.status === "completed" && t.date === todayStr,
+  );
+  const todayAll = [...active, ...todayCompleted];
+
+  const parseT = (ts) => {
+    const p = ts?.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!p) return 0;
+    let h = parseInt(p[1]);
+    const m = parseInt(p[2]);
+    if (p[3].toUpperCase() === "PM" && h < 12) h += 12;
+    if (p[3].toUpperCase() === "AM" && h === 12) h = 0;
+    return h * 60 + m;
+  };
+
+  const markReturn = (id) => {
+    setTD((p) =>
+      p.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              status: "completed",
+              timeOut: new Date().toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              }),
+              startTimestamp: null,
+            }
+          : t,
+      ),
+    );
+  };
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {active.length > 0 && (
+            <div
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                background: C.green,
+                boxShadow: `0 0 12px ${C.green}80`,
+                animation: "pulse 2s infinite",
+              }}
+            />
+          )}
+          <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>
+            Today's Test Drives
+          </h2>
+          <Badge color={C.accent}>{todayAll.length} total</Badge>
+          {active.length > 0 && (
+            <Badge color={C.green}>{active.length} active</Badge>
+          )}
+        </div>
+      </div>
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
+
+      {active.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          {active.map((t) => {
+            const veh = INVENTORY.find((v) => v.id === t.vehicleId);
+            return (
+              <div
+                key={t.id}
+                style={{
+                  ...C.glass,
+                  padding: "16px 18px",
+                  marginBottom: 10,
+                  borderLeft: `4px solid ${C.green}`,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    marginBottom: 10,
+                    gap: 8,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 10 }}
+                  >
+                    <div
+                      style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: 10,
+                        background: C.green + "12",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {I.car(C.green, 20)}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 15 }}>
+                        {t.customer}
+                      </div>
+                      <div style={{ fontSize: 12, color: C.textMuted }}>
+                        {t.phone}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div
+                      style={{
+                        fontSize: 9,
+                        color: C.textDim,
+                        textTransform: "uppercase",
+                        letterSpacing: 1,
+                        fontWeight: 600,
+                        marginBottom: 2,
+                      }}
+                    >
+                      Elapsed
+                    </div>
+                    {t.startTimestamp ? (
+                      <LiveTimer startTimestamp={t.startTimestamp} />
+                    ) : (
+                      <span
+                        style={{
+                          color: C.green,
+                          fontWeight: 600,
+                          fontSize: 13,
+                        }}
+                      >
+                        Out since {t.timeIn}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 16,
+                    fontSize: 12,
+                    flexWrap: "wrap",
+                    marginBottom: 12,
+                  }}
+                >
+                  <span>
+                    <span style={{ color: C.textDim }}>Vehicle:</span>{" "}
+                    <span style={{ fontWeight: 600 }}>{t.vehicle}</span>
+                  </span>
+                  <span>
+                    <span style={{ color: C.textDim }}>Sales:</span>{" "}
+                    <span style={{ fontWeight: 600 }}>{t.salesperson}</span>
+                  </span>
+                  {veh && (
+                    <span>
+                      <span style={{ color: C.textDim }}>DOL:</span>{" "}
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: dolAge(veh.daysOnLot),
+                        }}
+                      >
+                        {veh.daysOnLot}d
+                      </span>
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={() => markReturn(t.id)}
+                  style={{
+                    padding: "10px 0",
+                    borderRadius: 8,
+                    background: C.accent,
+                    border: "none",
+                    color: "#fff",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontFamily: "'Outfit',sans-serif",
+                    width: "100%",
+                  }}
+                >
+                  Mark Returned
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {todayCompleted.length > 0 && (
+        <div style={{ ...C.glass, padding: 14, overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 12,
+              minWidth: 500,
+            }}
+          >
+            <thead>
+              <tr style={{ borderBottom: `1px solid ${C.border}` }}>
+                {[
+                  "Customer",
+                  "Vehicle",
+                  "Salesperson",
+                  "Out",
+                  "Back",
+                  "Outcome",
+                ].map((h) => (
+                  <th
+                    key={h}
+                    style={{
+                      textAlign: "left",
+                      padding: "8px 10px",
+                      color: C.textDim,
+                      fontWeight: 600,
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: 1,
+                    }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {todayCompleted.map((t) => (
+                <tr
+                  key={t.id}
+                  style={{ borderBottom: `1px solid ${C.border}` }}
+                >
+                  <td style={{ padding: "8px 10px", fontWeight: 600 }}>
+                    {t.customer}
+                  </td>
+                  <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                    {t.vehicle}
+                  </td>
+                  <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                    {t.salesperson}
+                  </td>
+                  <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                    {t.timeIn}
+                  </td>
+                  <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                    {t.timeOut}
+                  </td>
+                  <td style={{ padding: "8px 10px" }}>
+                    {t.outcome === "sold" ? (
+                      <Badge color={C.green} sm>
+                        Sold
+                      </Badge>
+                    ) : t.outcome === "not_sold" ? (
+                      <Badge color={C.textDim} sm>
+                        No Sale
+                      </Badge>
+                    ) : (
+                      <Badge color={C.accent} sm>
+                        Pending
+                      </Badge>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {todayAll.length === 0 && (
+        <div style={{ ...C.glass, padding: 40, textAlign: "center" }}>
+          <div style={{ marginBottom: 8, opacity: 0.3 }}>
+            {I.car(C.textDim, 36)}
+          </div>
+          <div style={{ fontWeight: 600 }}>No test drives today yet</div>
+          <div style={{ fontSize: 13, color: C.textMuted, marginTop: 4 }}>
+            Start a new test drive to get going
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1023,297 +1678,7 @@ function LiveDashboard({ td, setTD }) {
           icon={I.clock(C.textDim, 16)}
         />
       </div>
-
-      {active.length > 0 ? (
-        <div style={{ marginBottom: 24 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              marginBottom: 14,
-            }}
-          >
-            <div
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: "50%",
-                background: C.green,
-                boxShadow: `0 0 10px ${C.green}`,
-                animation: "pulse 2s infinite",
-              }}
-            />
-            <span style={{ fontWeight: 700, fontSize: 16 }}>
-              Active Test Drives
-            </span>
-            <span style={{ fontSize: 12, color: C.textMuted }}>
-              ({active.length})
-            </span>
-          </div>
-          <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-          {active.map((t) => {
-            const veh = INVENTORY.find((v) => v.id === t.vehicleId);
-            const aged = veh && veh.daysOnLot >= 60;
-            return (
-              <div
-                key={t.id}
-                style={{
-                  ...C.glass,
-                  padding: "16px 18px",
-                  marginBottom: 10,
-                  borderLeft: `3px solid ${t.startTimestamp && Date.now() - t.startTimestamp > 45 * 60000 ? C.red : Date.now() - t.startTimestamp > 30 * 60000 ? "#ff9f0a" : C.green}`,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
-                    marginBottom: 10,
-                    gap: 8,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      minWidth: 0,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: 8,
-                        background: "rgba(255,255,255,0.04)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {I.car(C.text, 18)}
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: 14 }}>
-                        {t.customer}
-                      </div>
-                      <div style={{ fontSize: 11, color: C.textMuted }}>
-                        {t.phone}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right", flexShrink: 0 }}>
-                    <div
-                      style={{
-                        fontSize: 9,
-                        color: C.textDim,
-                        marginBottom: 2,
-                        textTransform: "uppercase",
-                        letterSpacing: 1,
-                        fontWeight: 600,
-                      }}
-                    >
-                      Elapsed
-                    </div>
-                    {t.startTimestamp ? (
-                      <LiveTimer startTimestamp={t.startTimestamp} />
-                    ) : (
-                      <span
-                        style={{
-                          color: C.green,
-                          fontWeight: 600,
-                          fontSize: 13,
-                        }}
-                      >
-                        Out since {t.timeIn}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    fontSize: 11,
-                    flexWrap: "wrap",
-                    marginBottom: 10,
-                  }}
-                >
-                  <span>
-                    <span style={{ color: C.textDim }}>Vehicle:</span>{" "}
-                    <span style={{ fontWeight: 600 }}>{t.vehicle}</span>
-                  </span>
-                  <span>
-                    <span style={{ color: C.textDim }}>Sales:</span>{" "}
-                    <span style={{ fontWeight: 600 }}>{t.salesperson}</span>
-                  </span>
-                  {veh && (
-                    <span>
-                      <span style={{ color: C.textDim }}>DOL:</span>{" "}
-                      <span
-                        style={{
-                          fontWeight: 700,
-                          color: dolAge(veh.daysOnLot),
-                        }}
-                      >
-                        {veh.daysOnLot}d
-                      </span>
-                    </span>
-                  )}
-                  {aged && (
-                    <Badge color={C.amber} sm>
-                      {I.mail(C.amber, 10)} Alert Sent
-                    </Badge>
-                  )}
-                </div>
-                <button
-                  onClick={() => markReturn(t.id)}
-                  style={{
-                    padding: "10px 0",
-                    borderRadius: 8,
-                    background: C.accent,
-                    border: "none",
-                    color: "#fff",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    fontFamily: "'Outfit',sans-serif",
-                    width: "100%",
-                  }}
-                >
-                  Mark Returned
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div
-          style={{
-            ...C.glass,
-            padding: 40,
-            textAlign: "center",
-            marginBottom: 24,
-          }}
-        >
-          <div style={{ marginBottom: 8, opacity: 0.4 }}>
-            {I.check(C.green, 32)}
-          </div>
-          <div style={{ fontWeight: 600 }}>No vehicles currently out</div>
-          <div style={{ fontSize: 13, color: C.textMuted, marginTop: 4 }}>
-            All test drives have been returned
-          </div>
-        </div>
-      )}
-
-      {validCompleted.length > 0 && (
-        <div>
-          <h2 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 12px" }}>
-            Returned Today
-          </h2>
-          <div
-            style={{
-              ...C.glass,
-              padding: 12,
-              overflowX: "auto",
-              WebkitOverflowScrolling: "touch",
-            }}
-          >
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: 12,
-                minWidth: 600,
-              }}
-            >
-              <thead>
-                <tr style={{ borderBottom: `1px solid ${C.border}` }}>
-                  {[
-                    "Customer",
-                    "Vehicle",
-                    "Salesperson",
-                    "Out",
-                    "Back",
-                    "Duration",
-                    "Outcome",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      style={{
-                        textAlign: "left",
-                        padding: "10px 12px",
-                        color: C.textDim,
-                        fontWeight: 600,
-                        fontSize: 10,
-                        textTransform: "uppercase",
-                        letterSpacing: 1,
-                      }}
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {validCompleted.map((t) => {
-                  const dur = parseT(t.timeOut) - parseT(t.timeIn);
-                  return (
-                    <tr
-                      key={t.id}
-                      style={{ borderBottom: `1px solid ${C.border}` }}
-                    >
-                      <td style={{ padding: 12, fontWeight: 600 }}>
-                        {t.customer}
-                      </td>
-                      <td style={{ padding: 12, color: C.textMuted }}>
-                        {t.vehicle}
-                      </td>
-                      <td style={{ padding: 12, color: C.textMuted }}>
-                        {t.salesperson}
-                      </td>
-                      <td style={{ padding: 12, color: C.textMuted }}>
-                        {t.timeIn}
-                      </td>
-                      <td style={{ padding: 12, color: C.textMuted }}>
-                        {t.timeOut}
-                      </td>
-                      <td
-                        style={{
-                          padding: 12,
-                          fontWeight: 600,
-                          color: dur > 30 ? C.red : C.green,
-                        }}
-                      >
-                        {dur} min
-                      </td>
-                      <td style={{ padding: 12 }}>
-                        {t.outcome === "sold" ? (
-                          <Badge color={C.green} sm>
-                            Sold
-                          </Badge>
-                        ) : t.outcome === "not_sold" ? (
-                          <Badge color={C.textDim} sm>
-                            No Sale
-                          </Badge>
-                        ) : (
-                          <Badge color={C.accent} sm>
-                            Pending
-                          </Badge>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      <TodayTestDrives td={td} setTD={setTD} />
     </div>
   );
 }
@@ -1361,7 +1726,7 @@ function SignaturePad({ onSign }) {
           border: `2px solid ${drawn ? C.green + "44" : C.border}`,
           borderRadius: 12,
           overflow: "hidden",
-          background: "#0a0a0f",
+          background: "#fafafa",
           position: "relative",
         }}
       >
@@ -1432,7 +1797,7 @@ function SignaturePad({ onSign }) {
               borderRadius: 8,
               background: C.green,
               border: "none",
-              color: C.bg,
+              color: "#fff",
               fontSize: 12,
               fontWeight: 700,
               cursor: "pointer",
@@ -1464,7 +1829,7 @@ function LicenseUpload({ label, subtitle, onUpload, preview }) {
         borderRadius: 14,
         padding: preview ? 8 : 32,
         cursor: "pointer",
-        background: preview ? C.green + "04" : C.accent + "04",
+        background: preview ? C.green + "04" : C.surface,
         textAlign: "center",
       }}
     >
@@ -1530,7 +1895,7 @@ function LandingPage({ onLogin }) {
   return (
     <div
       style={{
-        background: C.bg,
+        background: "#fff",
         color: C.text,
         fontFamily: "'Outfit',sans-serif",
         minHeight: "100vh",
@@ -1540,9 +1905,7 @@ function LandingPage({ onLogin }) {
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
       />
-      <style>{`@media(max-width:768px){.feat-grid{grid-template-columns:1fr !important}.lp-section{padding:40px 20px !important}.lp-nav{padding:0 16px !important}.lp-hero{padding:100px 20px 60px !important}.lp-h2{font-size:28px !important}.lp-cta-h{font-size:28px !important}.partner-grid{gap:20px !important}}`}</style>
       <nav
-        className="lp-nav"
         style={{
           position: "fixed",
           top: 0,
@@ -1554,9 +1917,9 @@ function LandingPage({ onLogin }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          background: "rgba(5,5,7,0.85)",
+          background: "rgba(255,255,255,0.9)",
           backdropFilter: "blur(24px)",
-          borderBottom: "1px solid rgba(255,255,255,0.04)",
+          borderBottom: `1px solid ${C.border}`,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1570,7 +1933,7 @@ function LandingPage({ onLogin }) {
             borderRadius: 100,
             background: C.text,
             border: "none",
-            color: C.bg,
+            color: "#fff",
             fontWeight: 600,
             fontSize: 13,
             cursor: "pointer",
@@ -1580,7 +1943,6 @@ function LandingPage({ onLogin }) {
         </button>
       </nav>
       <section
-        className="lp-hero"
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -1601,295 +1963,174 @@ function LandingPage({ onLogin }) {
         />
         <div
           style={{
-            maxWidth: 800,
+            maxWidth: 720,
+            position: "relative",
             opacity: vis ? 1 : 0,
-            transform: vis ? "translateY(0)" : "translateY(40px)",
+            transform: vis ? "translateY(0)" : "translateY(30px)",
             transition: "all 1s cubic-bezier(0.16,1,0.3,1)",
           }}
         >
+          <Badge color={C.accent}>Dealership Management Platform</Badge>
           <h1
             style={{
-              fontSize: "clamp(36px,7vw,84px)",
-              fontWeight: 700,
-              lineHeight: 0.95,
-              letterSpacing: "-0.03em",
-              margin: 0,
+              fontSize: 56,
+              fontWeight: 800,
+              lineHeight: 1.05,
+              margin: "20px 0 20px",
+              letterSpacing: -1.5,
             }}
           >
-            Know every car
+            Every test drive.
             <br />
-            <span style={{ ...C.gradText }}>on every drive.</span>
+            <span style={{ ...C.gradText }}>Tracked & optimized.</span>
           </h1>
-        </div>
-        <p
-          style={{
-            fontSize: "clamp(15px,2.5vw,18px)",
-            color: C.textMuted,
-            lineHeight: 1.65,
-            marginTop: 24,
-            maxWidth: 520,
-            opacity: vis ? 1 : 0,
-            transform: vis ? "translateY(0)" : "translateY(40px)",
-            transition: "all 1s cubic-bezier(0.16,1,0.3,1) 0.15s",
-          }}
-        >
-          Verify customer identity, capture digital agreements, track every test
-          drive in real time, and push leads to your CRM — all from your team's
-          phone.
-        </p>
-        <div
-          style={{
-            display: "flex",
-            gap: 14,
-            marginTop: 36,
-            opacity: vis ? 1 : 0,
-            transition: "all 1s ease 0.3s",
-          }}
-        >
+          <p
+            style={{
+              fontSize: 18,
+              color: C.textMuted,
+              lineHeight: 1.6,
+              maxWidth: 520,
+              margin: "0 0 36px",
+            }}
+          >
+            Real-time tracking, digital agreements, ID verification, CRM
+            integration, and commission management — all in one platform.
+          </p>
           <button
             onClick={onLogin}
             style={{
-              padding: "14px 36px",
+              padding: "16px 36px",
               borderRadius: 100,
-              background: C.text,
+              background: C.accent,
               border: "none",
-              color: C.bg,
-              fontWeight: 600,
+              color: "#fff",
+              fontWeight: 700,
               fontSize: 15,
               cursor: "pointer",
-              width: "auto",
+              boxShadow: `0 4px 24px ${C.accent}33`,
             }}
           >
             Get Started
           </button>
         </div>
       </section>
-      <section
-        className="lp-section"
-        style={{ padding: "80px 48px", borderTop: `1px solid ${C.border}` }}
-      >
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div
-            style={{
-              fontSize: 12,
-              color: C.accent,
-              textTransform: "uppercase",
-              letterSpacing: 2,
-              fontWeight: 600,
-              marginBottom: 12,
-            }}
-          >
-            Features
-          </div>
-          <h2
-            className="lp-h2"
-            style={{
-              fontSize: 42,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              margin: "0 0 48px",
-            }}
-          >
-            Everything your floor team needs
+      <section style={{ padding: "80px 48px", background: C.surface }}>
+        <div style={{ textAlign: "center", marginBottom: 60 }}>
+          <h2 style={{ fontSize: 36, fontWeight: 800, margin: "0 0 12px" }}>
+            Built for dealerships
           </h2>
-          <div
-            className="feat-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 1,
-              background: C.border,
-              borderRadius: 18,
-              overflow: "hidden",
-            }}
-          >
-            {[
-              {
-                icon: I.shield(C.accent, 24),
-                t: "Identity Verification",
-                d: "Upload license photos and verify through IDScan.net DIVE API.",
-              },
-              {
-                icon: I.clock(C.accent, 24),
-                t: "Time In / Time Out",
-                d: "Real-time tracking with live elapsed timers and aging alerts.",
-              },
-              {
-                icon: I.pen(C.accent, 24),
-                t: "Digital Agreements",
-                d: "Customers sign on-device with full SMS consent. Stored securely.",
-              },
-              {
-                icon: I.car(C.accent, 24),
-                t: "Inventory Sync",
-                d: "Live inventory with days-on-lot aging and priority alerts.",
-              },
-              {
-                icon: I.chart(C.accent, 24),
-                t: "Full Analytics",
-                d: "30-day history, performance metrics, customer database, close rates.",
-              },
-              {
-                icon: I.send(C.accent, 24),
-                t: "ADF/XML CRM Push",
-                d: "Every lead pushed in standard ADF format to your DMS.",
-              },
-            ].map((f, i) => (
-              <div
-                key={i}
-                style={{
-                  background: C.surface,
-                  padding: "28px 24px",
-                  transition: "background 0.3s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = C.surfaceLight)
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = C.surface)
-                }
-              >
-                <div style={{ marginBottom: 12 }}>{f.icon}</div>
-                <h3
-                  style={{ fontSize: 16, fontWeight: 600, margin: "0 0 6px" }}
-                >
-                  {f.t}
-                </h3>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: C.textMuted,
-                    lineHeight: 1.6,
-                    margin: 0,
-                  }}
-                >
-                  {f.d}
-                </p>
-              </div>
-            ))}
-          </div>
+          <p style={{ color: C.textMuted, fontSize: 16 }}>
+            Everything you need to manage your floor
+          </p>
         </div>
-      </section>
-      <section
-        className="lp-section"
-        style={{
-          padding: "60px 48px 80px",
-          borderTop: `1px solid ${C.border}`,
-        }}
-      >
-        <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: 12,
-              color: C.textDim,
-              textTransform: "uppercase",
-              letterSpacing: 2,
-              fontWeight: 600,
-              marginBottom: 16,
-            }}
-          >
-            Integrations & Partners
-          </div>
-          <h2
-            className="lp-h2"
-            style={{
-              fontSize: 32,
-              fontWeight: 700,
-              letterSpacing: -1,
-              margin: "0 0 40px",
-            }}
-          >
-            Connects with your existing tools
-          </h2>
-          <div
-            className="partner-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit,minmax(80px,1fr))",
-              gap: 28,
-              maxWidth: 700,
-              margin: "0 auto",
-            }}
-          >
-            {partners.map((p) => (
-              <div
-                key={p.name}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 8,
-                  opacity: 0.7,
-                }}
-              >
-                <div
-                  style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 14,
-                    background: `${p.color}12`,
-                    border: `1px solid ${p.color}22`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: p.abbr.length > 2 ? 12 : 16,
-                      fontWeight: 800,
-                      color: p.color,
-                      letterSpacing: -0.5,
-                    }}
-                  >
-                    {p.abbr}
-                  </span>
-                </div>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 11, color: C.text, fontWeight: 600 }}>
-                    {p.name}
-                  </div>
-                  <div style={{ fontSize: 9, color: C.textDim }}>{p.desc}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section
-        className="lp-section"
-        style={{
-          padding: "60px 48px 80px",
-          textAlign: "center",
-          borderTop: `1px solid ${C.border}`,
-        }}
-      >
-        <h2
-          className="lp-cta-h"
+        <div
+          className="feat-grid"
           style={{
-            fontSize: 42,
-            fontWeight: 700,
-            letterSpacing: -1.5,
-            margin: "0 0 40px",
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 20,
+            maxWidth: 1000,
+            margin: "0 auto",
           }}
         >
-          Ready to know where every key is?
-        </h2>
-        <button
-          onClick={onLogin}
+          {[
+            {
+              icon: I.clock(C.accent, 28),
+              title: "Live Tracking",
+              desc: "Real-time timers and alerts for every test drive",
+            },
+            {
+              icon: I.shield(C.green, 28),
+              title: "ID Verification",
+              desc: "IDScan.net integration with automatic validation",
+            },
+            {
+              icon: I.pen(C.blue, 28),
+              title: "Digital Agreements",
+              desc: "Paperless signatures with TCPA-compliant consent",
+            },
+            {
+              icon: I.send(C.purple, 28),
+              title: "CRM Integration",
+              desc: "Automatic ADF/XML delivery to your CRM",
+            },
+            {
+              icon: I.dollar(C.green, 28),
+              title: "Commission Tracking",
+              desc: "Tiered commission structure with real-time payouts",
+            },
+            {
+              icon: I.chart(C.accent, 28),
+              title: "Reporting",
+              desc: "Month-over-month performance dashboards",
+            },
+          ].map((f) => (
+            <div key={f.title} style={{ ...C.glass, padding: 28 }}>
+              <div style={{ marginBottom: 14 }}>{f.icon}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>
+                {f.title}
+              </div>
+              <div
+                style={{ fontSize: 13, color: C.textMuted, lineHeight: 1.5 }}
+              >
+                {f.desc}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section style={{ padding: "60px 48px", textAlign: "center" }}>
+        <div
           style={{
-            padding: "16px 48px",
-            borderRadius: 100,
-            background: C.text,
-            border: "none",
-            color: C.bg,
+            fontSize: 11,
+            color: C.textDim,
+            textTransform: "uppercase",
+            letterSpacing: 2,
             fontWeight: 600,
-            fontSize: 15,
-            cursor: "pointer",
+            marginBottom: 24,
           }}
         >
-          Sign In to Demo
-        </button>
+          Integration Partners
+        </div>
+        <div
+          className="partner-grid"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 32,
+            maxWidth: 800,
+            margin: "0 auto",
+          }}
+        >
+          {partners.map((p) => (
+            <div
+              key={p.name}
+              style={{ display: "flex", alignItems: "center", gap: 8 }}
+            >
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background: p.color + "14",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 9,
+                  fontWeight: 800,
+                  color: p.color,
+                }}
+              >
+                {p.abbr}
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 12, fontWeight: 600 }}>{p.name}</div>
+                <div style={{ fontSize: 10, color: C.textDim }}>{p.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );
@@ -1905,106 +2146,101 @@ function LoginPage({ onLogin, onBack }) {
     setError("");
     setLoading(true);
     setTimeout(() => {
-      const f = Object.values(USERS).find(
+      const u = Object.values(USERS).find(
         (u) => u.email === email && u.password === pass,
       );
-      if (f) onLogin(f);
+      if (u) onLogin(u);
       else {
         setError("Invalid credentials");
         setLoading(false);
       }
-    }, 800);
-  };
-  const inp = {
-    width: "100%",
-    padding: "14px 16px",
-    borderRadius: 12,
-    border: `1px solid ${C.border}`,
-    background: "rgba(255,255,255,0.04)",
-    color: C.text,
-    fontSize: 14,
-    fontFamily: "'Outfit',sans-serif",
-    outline: "none",
-    boxSizing: "border-box",
+    }, 600);
   };
   return (
     <div
       style={{
-        background: C.bg,
-        color: C.text,
-        fontFamily: "'Outfit',sans-serif",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        background: C.surface,
+        color: C.text,
+        fontFamily: "'Outfit',sans-serif",
+        padding: 20,
       }}
     >
       <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
       />
-      <div style={{ width: "100%", maxWidth: 400, padding: "0 20px" }}>
+      <div style={{ width: 400, maxWidth: "100%" }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <Logo size={48} />
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "14px 0 6px" }}>
-            Sign in to Test Drive Pro
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: "14px 0 4px" }}>
+            Welcome back
           </h1>
-          <p style={{ color: C.textMuted, fontSize: 13, margin: 0 }}>
-            Magnetism Motors — Lawrenceville, GA
+          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>
+            Sign in to Test Drive Pro
           </p>
         </div>
         <div style={{ ...C.glass, padding: 32 }}>
-          <div style={{ marginBottom: 18 }}>
-            <label
-              style={{
-                fontSize: 12,
-                color: C.textMuted,
-                fontWeight: 600,
-                marginBottom: 6,
-                display: "block",
-                textTransform: "uppercase",
-                letterSpacing: 0.8,
-              }}
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@magnetismmotors.com"
-              style={inp}
-            />
-          </div>
-          <div style={{ marginBottom: 24 }}>
-            <label
-              style={{
-                fontSize: 12,
-                color: C.textMuted,
-                fontWeight: 600,
-                marginBottom: 6,
-                display: "block",
-                textTransform: "uppercase",
-                letterSpacing: 0.8,
-              }}
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-              placeholder="Password"
-              style={inp}
-              onKeyDown={(e) => e.key === "Enter" && submit()}
-            />
-          </div>
+          {[
+            {
+              l: "Email",
+              v: email,
+              s: setEmail,
+              t: "email",
+              p: "you@magnetismmotors.com",
+            },
+            {
+              l: "Password",
+              v: pass,
+              s: setPass,
+              t: "password",
+              p: "••••••••",
+            },
+          ].map((f) => (
+            <div key={f.l} style={{ marginBottom: 18 }}>
+              <label
+                style={{
+                  fontSize: 12,
+                  color: C.textMuted,
+                  fontWeight: 600,
+                  display: "block",
+                  marginBottom: 6,
+                  textTransform: "uppercase",
+                  letterSpacing: 0.8,
+                }}
+              >
+                {f.l}
+              </label>
+              <input
+                type={f.t}
+                value={f.v}
+                onChange={(e) => f.s(e.target.value)}
+                placeholder={f.p}
+                onKeyDown={(e) => e.key === "Enter" && submit()}
+                style={{
+                  width: "100%",
+                  padding: "14px 16px",
+                  borderRadius: 12,
+                  border: `1px solid ${C.border}`,
+                  background: C.surface,
+                  color: C.text,
+                  fontSize: 14,
+                  fontFamily: "'Outfit',sans-serif",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+          ))}
           {error && (
             <div
               style={{
                 padding: "10px 14px",
                 borderRadius: 10,
-                background: C.red + "14",
+                background: C.red + "0a",
                 color: C.red,
                 fontSize: 13,
                 marginBottom: 18,
@@ -2023,7 +2259,7 @@ function LoginPage({ onLogin, onBack }) {
               width: "100%",
               padding: "14px",
               borderRadius: 12,
-              background: `linear-gradient(135deg,${C.accent},${C.accentHover})`,
+              background: C.accent,
               border: "none",
               color: "#fff",
               fontWeight: 700,
@@ -2039,7 +2275,7 @@ function LoginPage({ onLogin, onBack }) {
             marginTop: 24,
             padding: "20px 24px",
             borderRadius: 14,
-            background: "rgba(255,255,255,0.02)",
+            background: "#fff",
             border: `1px solid ${C.border}`,
           }}
         >
@@ -2139,7 +2375,7 @@ function useIsMobile(bp = 768) {
   return m;
 }
 
-// ═══ APP SHELL (responsive) ═══
+// ═══ APP SHELL ═══
 function Shell({ user, onLogout, children, nav, active, setView }) {
   const rc = { admin: C.accent, manager: C.blue, salesperson: C.green }[
     user.role
@@ -2166,8 +2402,6 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet"
       />
-
-      {/* MOBILE TOP BAR */}
       {mob && (
         <header
           style={{
@@ -2178,7 +2412,7 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
             alignItems: "center",
             justifyContent: "space-between",
             padding: "12px 16px",
-            background: C.surface,
+            background: "#fff",
             borderBottom: `1px solid ${C.border}`,
             backdropFilter: "blur(20px)",
           }}
@@ -2196,41 +2430,26 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
                 gap: 4,
               }}
             >
-              <span
-                style={{
-                  display: "block",
-                  width: 20,
-                  height: 2,
-                  background: C.text,
-                  borderRadius: 1,
-                  transition: "all 0.3s",
-                  transform: open ? "rotate(45deg) translate(4px,4px)" : "none",
-                }}
-              />
-              <span
-                style={{
-                  display: "block",
-                  width: 20,
-                  height: 2,
-                  background: C.text,
-                  borderRadius: 1,
-                  transition: "all 0.3s",
-                  opacity: open ? 0 : 1,
-                }}
-              />
-              <span
-                style={{
-                  display: "block",
-                  width: 20,
-                  height: 2,
-                  background: C.text,
-                  borderRadius: 1,
-                  transition: "all 0.3s",
-                  transform: open
-                    ? "rotate(-45deg) translate(4px,-4px)"
-                    : "none",
-                }}
-              />
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  style={{
+                    display: "block",
+                    width: 20,
+                    height: 2,
+                    background: C.text,
+                    borderRadius: 1,
+                    transition: "all 0.3s",
+                    transform:
+                      i === 0 && open
+                        ? "rotate(45deg) translate(4px,4px)"
+                        : i === 2 && open
+                          ? "rotate(-45deg) translate(4px,-4px)"
+                          : "none",
+                    opacity: i === 1 && open ? 0 : 1,
+                  }}
+                />
+              ))}
             </button>
             <Logo size={28} />
             <span style={{ fontSize: 14, fontWeight: 600 }}>
@@ -2246,7 +2465,7 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
                 width: 30,
                 height: 30,
                 borderRadius: 8,
-                background: rc + "18",
+                background: rc + "14",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -2260,8 +2479,6 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
           </div>
         </header>
       )}
-
-      {/* MOBILE DRAWER OVERLAY */}
       {mob && open && (
         <div
           onClick={() => setOpen(false)}
@@ -2269,17 +2486,15 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
             position: "fixed",
             inset: 0,
             zIndex: 98,
-            background: "rgba(0,0,0,0.6)",
+            background: "rgba(0,0,0,0.3)",
             backdropFilter: "blur(4px)",
           }}
         />
       )}
-
-      {/* SIDEBAR / MOBILE DRAWER */}
       <aside
         style={{
           width: mob ? "280px" : "232px",
-          background: C.surface,
+          background: "#fff",
           borderRight: mob ? "none" : `1px solid ${C.border}`,
           padding: "20px 14px",
           display: "flex",
@@ -2290,7 +2505,7 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
           height: mob ? "calc(100vh - 56px)" : "100vh",
           zIndex: 99,
           transition: mob ? "left 0.3s cubic-bezier(0.4,0,0.2,1)" : "none",
-          boxShadow: mob && open ? "8px 0 32px rgba(0,0,0,0.5)" : "none",
+          boxShadow: mob && open ? "8px 0 32px rgba(0,0,0,0.15)" : "none",
         }}
       >
         {!mob && (
@@ -2341,9 +2556,8 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
                 padding: mob ? "12px 14px" : "10px 12px",
                 borderRadius: 10,
                 border: "none",
-                background:
-                  active === n.id ? "rgba(255,255,255,0.06)" : "transparent",
-                color: active === n.id ? C.text : C.textMuted,
+                background: active === n.id ? C.accent + "0c" : "transparent",
+                color: active === n.id ? C.accent : C.textMuted,
                 fontSize: mob ? 14 : 13,
                 fontWeight: active === n.id ? 600 : 500,
                 cursor: "pointer",
@@ -2377,7 +2591,7 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
                   width: 34,
                   height: 34,
                   borderRadius: 10,
-                  background: rc + "18",
+                  background: rc + "14",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -2427,6 +2641,7 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
           padding: mob ? "20px 16px" : "32px 40px",
           minHeight: "100vh",
           width: mob ? "100%" : "auto",
+          background: C.surface,
         }}
       >
         {children}
@@ -2453,12 +2668,7 @@ function TDTable({ drives, showSales = true }) {
   return (
     <div
       className="resp-table-wrap"
-      style={{
-        ...C.glass,
-        padding: "12px",
-        overflowX: "auto",
-        WebkitOverflowScrolling: "touch",
-      }}
+      style={{ ...C.glass, padding: "12px", overflowX: "auto" }}
     >
       <table
         style={{
@@ -2591,7 +2801,7 @@ function TDTable({ drives, showSales = true }) {
   );
 }
 
-// ═══ INVENTORY VIEW WITH DAYS ON LOT ═══
+// ═══ INVENTORY VIEW ═══
 function InvView({ td }) {
   const [f, setF] = useState("all");
   const [sort, setSort] = useState("dol");
@@ -2627,7 +2837,7 @@ function InvView({ td }) {
                 padding: "7px 14px",
                 borderRadius: 100,
                 border: `1px solid ${f === v ? C.accent + "44" : C.border}`,
-                background: f === v ? C.accent + "14" : "transparent",
+                background: f === v ? C.accentLight : "transparent",
                 color: f === v ? C.accent : C.textMuted,
                 fontSize: 11,
                 fontWeight: 600,
@@ -2649,7 +2859,7 @@ function InvView({ td }) {
                 padding: "7px 14px",
                 borderRadius: 100,
                 border: `1px solid ${sort === v ? C.blue + "44" : C.border}`,
-                background: sort === v ? C.blue + "14" : "transparent",
+                background: sort === v ? C.blue + "0a" : "transparent",
                 color: sort === v ? C.blue : C.textMuted,
                 fontSize: 11,
                 fontWeight: 600,
@@ -2677,12 +2887,10 @@ function InvView({ td }) {
           {I.alert(C.amber, 18)}
           <div style={{ flex: 1 }}>
             <span style={{ fontWeight: 700, fontSize: 13 }}>
-              Aging Inventory Alert:
+              Aging Inventory Alert:{" "}
             </span>
             <span style={{ fontSize: 13, color: C.textMuted }}>
-              {" "}
-              {critical} critical (90+ days), {aging} aging (60-89 days). Email
-              alerts fire when these vehicles go on test drives.
+              {critical} critical (90+ days), {aging} aging (60-89 days).
             </span>
           </div>
         </div>
@@ -2704,9 +2912,10 @@ function InvView({ td }) {
               style={{
                 borderRadius: 16,
                 overflow: "hidden",
-                background: C.surface,
+                background: "#fff",
                 border: `1px solid ${C.border}`,
                 transition: "all 0.25s",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.transform = "translateY(-3px)")
@@ -2765,9 +2974,9 @@ function InvView({ td }) {
                       borderRadius: 100,
                       fontSize: 10,
                       fontWeight: 700,
-                      background: dc + "22",
+                      background: dc + "14",
                       color: dc,
-                      border: `1px solid ${dc}33`,
+                      border: `1px solid ${dc}28`,
                     }}
                   >
                     {v.daysOnLot}d on lot
@@ -2775,28 +2984,8 @@ function InvView({ td }) {
                 </div>
               </div>
               <div style={{ padding: "14px 16px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ fontSize: 11, color: C.textDim }}>
-                    {v.year} · {v.color}
-                  </div>
-                  {v.daysOnLot >= 60 && (
-                    <div
-                      style={{ display: "flex", alignItems: "center", gap: 3 }}
-                    >
-                      {I.alert(dc, 12)}
-                      <span
-                        style={{ fontSize: 10, fontWeight: 700, color: dc }}
-                      >
-                        {dolLabel(v.daysOnLot)}
-                      </span>
-                    </div>
-                  )}
+                <div style={{ fontSize: 11, color: C.textDim }}>
+                  {v.year} · {v.color}
                 </div>
                 <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>
                   {v.make} {v.model}
@@ -2847,6 +3036,7 @@ function Contract({ vehicle, sigData }) {
         overflow: "auto",
         fontSize: 12.5,
         lineHeight: 1.7,
+        border: `1px solid ${C.border}`,
       }}
     >
       <div
@@ -3064,6 +3254,13 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
     setStarted(true);
   };
   const sv = sel ? INVENTORY.find((v) => v.id === sel) : null;
+  const filteredInv = INVENTORY.filter(
+    (v) =>
+      !vehQ ||
+      `${v.year} ${v.make} ${v.model} ${v.trim}`
+        .toLowerCase()
+        .includes(vehQ.toLowerCase()),
+  );
   return (
     <div>
       <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 4px" }}>
@@ -3089,20 +3286,16 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
                   height: 32,
                   borderRadius: "50%",
                   background:
-                    i < step
-                      ? C.green
-                      : i === step
-                        ? C.accent
-                        : "rgba(255,255,255,0.06)",
+                    i < step ? C.green : i === step ? C.accent : C.surfaceLight,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: 12,
                   fontWeight: 700,
-                  color: i <= step ? C.bg : C.textDim,
+                  color: i < step ? "#fff" : i === step ? "#fff" : C.textDim,
                 }}
               >
-                {i < step ? <span>{I.check(C.bg, 14)}</span> : i + 1}
+                {i < step ? <span>{I.check("#fff", 14)}</span> : i + 1}
               </div>
               <span
                 style={{
@@ -3128,7 +3321,18 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
           </div>
         ))}
       </div>
-      {step === 0 && (
+      {started ? (
+        <div style={{ ...C.glass, padding: 48, textAlign: "center" }}>
+          <div style={{ marginBottom: 12 }}>{I.check(C.green, 48)}</div>
+          <h2 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 8px" }}>
+            Test Drive Started!
+          </h2>
+          <p style={{ color: C.textMuted, fontSize: 14 }}>
+            {parsed?.firstName} {parsed?.lastName} is on a test drive with{" "}
+            {sv?.year} {sv?.make} {sv?.model}
+          </p>
+        </div>
+      ) : step === 0 ? (
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
           {!verified ? (
             <div style={{ ...C.glass, padding: 32 }}>
@@ -3185,7 +3389,7 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
                     padding: "14px 16px",
                     borderRadius: 12,
                     border: `1px solid ${C.border}`,
-                    background: "rgba(255,255,255,0.04)",
+                    background: C.surface,
                     color: C.text,
                     fontSize: 14,
                     fontFamily: "'Outfit',sans-serif",
@@ -3199,495 +3403,211 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
                   onClick={verify}
                   style={{
                     width: "100%",
-                    padding: "14px",
+                    padding: 14,
                     borderRadius: 12,
-                    background: `linear-gradient(135deg,${C.accent},${C.accentHover})`,
+                    background: C.accent,
                     border: "none",
                     color: "#fff",
                     fontWeight: 700,
-                    fontSize: 15,
+                    fontSize: 14,
                     cursor: "pointer",
                     fontFamily: "'Outfit',sans-serif",
                   }}
                 >
-                  Verify via IDScan.net
+                  Verify Identity
                 </button>
               )}
               {verifying && (
-                <div style={{ textAlign: "center", padding: 20 }}>
-                  <div
-                    style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: "50%",
-                      border: `3px solid ${C.accent}`,
-                      borderTopColor: "transparent",
-                      margin: "0 auto 12px",
-                      animation: "spin 1s linear infinite",
-                    }}
-                  />
-                  <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-                  <div style={{ fontWeight: 600 }}>
-                    Verifying with IDScan.net...
-                  </div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: 20,
+                    color: C.textMuted,
+                  }}
+                >
+                  Verifying identity...
                 </div>
               )}
             </div>
           ) : (
-            <div style={{ ...C.glass, padding: 32 }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  marginBottom: 20,
-                }}
-              >
+            <div>
+              <div style={{ ...C.glass, padding: 24, marginBottom: 16 }}>
                 <div
                   style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                    background: C.green + "15",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    gap: 10,
+                    marginBottom: 16,
                   }}
                 >
-                  {I.shield(C.green, 24)}
-                </div>
-                <div>
-                  <div style={{ fontSize: 18, fontWeight: 700 }}>
+                  {I.check(C.green, 20)}
+                  <span style={{ fontWeight: 700, color: C.green }}>
                     Identity Verified
-                  </div>
-                  <div style={{ fontSize: 12, color: C.textMuted }}>
-                    Trust Score:{" "}
-                    <span style={{ color: C.green, fontWeight: 700 }}>
-                      {parsed.trust}/100
-                    </span>
-                  </div>
+                  </span>
+                  <Badge color={C.green} sm>
+                    {parsed.trust}% match
+                  </Badge>
                 </div>
-              </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 12,
-                  fontSize: 13,
-                  padding: 14,
-                  background: "rgba(255,255,255,0.02)",
-                  borderRadius: 10,
-                }}
-              >
-                {[
-                  ["Name", `${parsed.firstName} ${parsed.lastName}`],
-                  ["DOB", parsed.dob],
-                  ["License", parsed.license],
-                  ["Expires", parsed.expires],
-                  ["Address", parsed.address],
-                  ["State", parsed.state],
-                ].map(([l, v]) => (
-                  <div key={l}>
-                    <div
-                      style={{
-                        color: C.textDim,
-                        fontSize: 10,
-                        fontWeight: 600,
-                        textTransform: "uppercase",
-                        marginBottom: 2,
-                      }}
-                    >
-                      {l}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 8,
+                    fontSize: 13,
+                  }}
+                >
+                  {[
+                    ["Name", `${parsed.firstName} ${parsed.lastName}`],
+                    ["DOB", parsed.dob],
+                    ["License", parsed.license],
+                    ["Expires", parsed.expires],
+                    ["State", parsed.state],
+                    ["Address", parsed.address],
+                  ].map(([l, v]) => (
+                    <div key={l}>
+                      <span style={{ color: C.textDim }}>{l}:</span>{" "}
+                      <span style={{ fontWeight: 600 }}>{v}</span>
                     </div>
-                    <div style={{ fontWeight: 600 }}>{v}</div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
               <button
                 onClick={() => setStep(1)}
                 style={{
                   width: "100%",
-                  marginTop: 20,
-                  padding: "14px",
-                  borderRadius: 100,
-                  background: C.text,
+                  padding: 14,
+                  borderRadius: 12,
+                  background: C.accent,
                   border: "none",
-                  color: C.bg,
-                  fontWeight: 600,
+                  color: "#fff",
+                  fontWeight: 700,
                   fontSize: 14,
                   cursor: "pointer",
                   fontFamily: "'Outfit',sans-serif",
                 }}
               >
-                Continue
+                Continue to Vehicle Selection
               </button>
             </div>
           )}
         </div>
-      )}
-      {step === 1 && (
-        <div style={{ maxWidth: 600, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 4px" }}>
-            Select Vehicle
-          </h2>
-          <p style={{ color: C.textDim, fontSize: 13, margin: "0 0 20px" }}>
-            Enter stock number or search by make, model, year
-          </p>
-          <div style={{ position: "relative", marginBottom: 16 }}>
-            <div
-              style={{
-                position: "absolute",
-                left: 14,
-                top: "50%",
-                transform: "translateY(-50%)",
-                opacity: 0.4,
-              }}
-            >
-              {I.tag(C.textMuted, 16)}
-            </div>
-            <input
-              type="text"
-              value={vehQ}
-              onChange={(e) => {
-                const val = e.target.value;
-                setVehQ(val);
-                const ex = INVENTORY.find(
-                  (v) => v.stock.toLowerCase() === val.trim().toLowerCase(),
-                );
-                setSel(ex ? ex.id : null);
-              }}
-              placeholder="Stock # or search (e.g. FE008412, Bronco, Porsche)"
-              style={{
-                width: "100%",
-                padding: "14px 16px 14px 42px",
-                borderRadius: 12,
-                border: `1px solid ${vehQ && !sel ? C.accent + "66" : C.border}`,
-                background: "rgba(255,255,255,0.04)",
-                color: C.text,
-                fontSize: 14,
-                fontFamily: "'Outfit',sans-serif",
-                outline: "none",
-                boxSizing: "border-box",
-              }}
-              autoFocus
-            />
-          </div>
-          {(() => {
-            const q = vehQ.trim().toLowerCase();
-            if (!q)
-              return (
-                <div style={{ ...C.glass, padding: 32, textAlign: "center" }}>
-                  <div style={{ opacity: 0.3, marginBottom: 8 }}>
-                    {I.car(C.textDim, 32)}
-                  </div>
-                  <div style={{ color: C.textDim, fontSize: 13 }}>
-                    Type a stock number to look up a vehicle instantly
-                  </div>
-                </div>
-              );
-            const matches = INVENTORY.filter((v) => {
-              const hay =
-                `${v.stock} ${v.year} ${v.make} ${v.model} ${v.trim} ${v.color} ${v.vin}`.toLowerCase();
-              return hay.includes(q);
-            });
-            if (matches.length === 0)
-              return (
-                <div
-                  style={{
-                    ...C.glass,
-                    padding: 24,
-                    textAlign: "center",
-                    borderLeft: `3px solid ${C.red}`,
-                  }}
-                >
-                  <div style={{ fontWeight: 600, color: C.red }}>
-                    No vehicle found
-                  </div>
-                  <div
-                    style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}
-                  >
-                    Check the stock number or try a different search
-                  </div>
-                </div>
-              );
-            return (
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {matches.slice(0, 6).map((v) => {
-                  const active = sel === v.id;
-                  const dc = dolAge(v.daysOnLot);
-                  return (
-                    <div
-                      key={v.id}
-                      onClick={() => setSel(v.id)}
-                      style={{
-                        ...C.glass,
-                        padding: "14px 18px",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 14,
-                        borderColor: active ? C.accent : C.border,
-                        boxShadow: active ? `0 0 20px ${C.accent}15` : "none",
-                        transition: "all 0.2s",
-                      }}
-                    >
-                      {active && (
-                        <div
-                          style={{
-                            width: 20,
-                            height: 20,
-                            borderRadius: "50%",
-                            background: C.accent,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {I.check(C.bg, 12)}
-                        </div>
-                      )}
-                      {!active && (
-                        <div
-                          style={{
-                            width: 20,
-                            height: 20,
-                            borderRadius: "50%",
-                            border: `2px solid ${C.border}`,
-                            flexShrink: 0,
-                          }}
-                        />
-                      )}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                          }}
-                        >
-                          <span style={{ fontWeight: 700, fontSize: 14 }}>
-                            {v.year} {v.make} {v.model}
-                          </span>
-                          <span
-                            style={{
-                              fontSize: 10,
-                              padding: "2px 8px",
-                              borderRadius: 100,
-                              background: dc + "14",
-                              color: dc,
-                              fontWeight: 700,
-                              border: `1px solid ${dc}22`,
-                            }}
-                          >
-                            {v.daysOnLot}d
-                          </span>
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 12,
-                            color: C.textMuted,
-                            marginTop: 2,
-                          }}
-                        >
-                          {v.trim} · {v.color}
-                        </div>
-                      </div>
-                      <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div
-                          style={{
-                            fontWeight: 700,
-                            fontSize: 14,
-                            ...C.gradText,
-                          }}
-                        >
-                          {fmt(v.price)}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 10,
-                            color: C.textDim,
-                            fontFamily: "'Courier New',monospace",
-                            marginTop: 2,
-                          }}
-                        >
-                          #{v.stock}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                {matches.length > 6 && (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      fontSize: 12,
-                      color: C.textDim,
-                      padding: 8,
-                    }}
-                  >
-                    +{matches.length - 6} more — refine your search
-                  </div>
-                )}
-              </div>
-            );
-          })()}
-          {sel && (
-            <div style={{ marginTop: 16 }}>
-              <div
+      ) : step === 1 ? (
+        <div>
+          <input
+            value={vehQ}
+            onChange={(e) => setVehQ(e.target.value)}
+            placeholder="Search vehicles..."
+            style={{
+              width: "100%",
+              padding: "14px 16px",
+              borderRadius: 12,
+              border: `1px solid ${C.border}`,
+              background: "#fff",
+              color: C.text,
+              fontSize: 14,
+              fontFamily: "'Outfit',sans-serif",
+              outline: "none",
+              boxSizing: "border-box",
+              marginBottom: 16,
+            }}
+          />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))",
+              gap: 12,
+            }}
+          >
+            {filteredInv.map((v) => (
+              <button
+                key={v.id}
+                onClick={() => setSel(v.id)}
                 style={{
                   ...C.glass,
                   padding: 16,
-                  marginBottom: 16,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  borderLeft: `3px solid ${C.green}`,
+                  cursor: "pointer",
+                  border:
+                    sel === v.id
+                      ? `2px solid ${C.accent}`
+                      : `1px solid ${C.border}`,
+                  borderRadius: 14,
+                  textAlign: "left",
+                  fontFamily: "'Outfit',sans-serif",
+                  background: sel === v.id ? C.accentLight : "#fff",
                 }}
               >
-                {I.check(C.green, 16)}
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontWeight: 700, fontSize: 13 }}>
-                    Selected:
-                  </span>{" "}
-                  <span style={{ color: C.textMuted, fontSize: 13 }}>
-                    {INVENTORY.find((v) => v.id === sel)?.year}{" "}
-                    {INVENTORY.find((v) => v.id === sel)?.make}{" "}
-                    {INVENTORY.find((v) => v.id === sel)?.model} — Stock #
-                    {INVENTORY.find((v) => v.id === sel)?.stock}
+                <div style={{ fontWeight: 700, fontSize: 14 }}>
+                  {v.year} {v.make} {v.model}
+                </div>
+                <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
+                  {v.trim}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: 8,
+                    fontSize: 12,
+                  }}
+                >
+                  <span style={{ fontWeight: 700, ...C.gradText }}>
+                    {fmt(v.price)}
+                  </span>
+                  <span style={{ color: dolAge(v.daysOnLot), fontWeight: 700 }}>
+                    {v.daysOnLot}d
                   </span>
                 </div>
-              </div>
-              <button
-                onClick={() => setStep(2)}
-                style={{
-                  width: "100%",
-                  padding: "14px",
-                  borderRadius: 100,
-                  background: C.text,
-                  border: "none",
-                  color: C.bg,
-                  fontWeight: 600,
-                  fontSize: 14,
-                  cursor: "pointer",
-                  fontFamily: "'Outfit',sans-serif",
-                }}
-              >
-                Continue
               </button>
-            </div>
+            ))}
+          </div>
+          {sel && (
+            <button
+              onClick={() => setStep(2)}
+              style={{
+                marginTop: 20,
+                width: "100%",
+                padding: 14,
+                borderRadius: 12,
+                background: C.accent,
+                border: "none",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: 14,
+                cursor: "pointer",
+                fontFamily: "'Outfit',sans-serif",
+              }}
+            >
+              Continue to Agreement
+            </button>
           )}
         </div>
-      )}
-      {step === 2 && (
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          {!started ? (
-            <>
-              {sv && sv.daysOnLot >= 60 && (
-                <div
-                  style={{
-                    ...C.glass,
-                    padding: "14px 18px",
-                    marginBottom: 16,
-                    borderLeft: `3px solid ${C.amber}`,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  {I.mail(C.amber, 18)}
-                  <div style={{ fontSize: 13 }}>
-                    <span style={{ fontWeight: 700, color: C.amber }}>
-                      Priority Vehicle
-                    </span>{" "}
-                    — {sv.daysOnLot} days on lot. Admin & manager will be
-                    notified via email when this drive starts.
-                  </div>
-                </div>
-              )}
-              <Contract vehicle={sv} sigData={sigData} />
-              <div style={{ marginTop: 20 }}>
-                <div
-                  style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}
-                >
-                  Customer Signature
-                </div>
-                {!sigData ? (
-                  <SignaturePad onSign={(d) => setSigData(d)} />
-                ) : (
-                  <div
-                    style={{
-                      ...C.glass,
-                      padding: 14,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div
-                      style={{ display: "flex", alignItems: "center", gap: 10 }}
-                    >
-                      <Badge color={C.green}>Signed</Badge>
-                      <span style={{ fontSize: 13, color: C.textMuted }}>
-                        by {parsed?.firstName} {parsed?.lastName}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => setSigData(null)}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: C.textDim,
-                        fontSize: 12,
-                        cursor: "pointer",
-                        fontFamily: "'Outfit',sans-serif",
-                      }}
-                    >
-                      Re-sign
-                    </button>
-                  </div>
-                )}
-              </div>
-              {sigData && (
-                <button
-                  onClick={go}
-                  style={{
-                    width: "100%",
-                    marginTop: 20,
-                    padding: "16px",
-                    borderRadius: 12,
-                    background: `linear-gradient(135deg,${C.green},#22c55e)`,
-                    border: "none",
-                    color: C.bg,
-                    fontWeight: 700,
-                    fontSize: 16,
-                    cursor: "pointer",
-                    fontFamily: "'Outfit',sans-serif",
-                  }}
-                >
-                  Start Test Drive
-                </button>
-              )}
-            </>
-          ) : (
-            <div style={{ textAlign: "center", ...C.glass, padding: 40 }}>
-              <div style={{ marginBottom: 12, opacity: 0.5 }}>
-                {I.car(C.green, 40)}
-              </div>
-              <h2 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 6px" }}>
-                Test Drive Active
-              </h2>
-              <p style={{ color: C.textMuted, fontSize: 13, marginBottom: 16 }}>
-                Timer running. Lead pushed to CRM.
-              </p>
-              <div
-                style={{ display: "flex", gap: 8, justifyContent: "center" }}
-              >
-                <Badge color={C.green}>Signed</Badge>
-                <Badge color={C.blue}>ADF Sent</Badge>
-                <Badge color={C.green}>ID Verified</Badge>
-              </div>
+      ) : (
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <Contract vehicle={sv} sigData={sigData} />
+          {!sigData && (
+            <div style={{ marginTop: 20 }}>
+              <SignaturePad onSign={setSigData} />
             </div>
+          )}
+          {sigData && (
+            <button
+              onClick={go}
+              style={{
+                marginTop: 20,
+                width: "100%",
+                padding: 14,
+                borderRadius: 12,
+                background: C.green,
+                border: "none",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: 14,
+                cursor: "pointer",
+                fontFamily: "'Outfit',sans-serif",
+              }}
+            >
+              Start Test Drive
+            </button>
           )}
         </div>
       )}
@@ -3695,65 +3615,79 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
   );
 }
 
-// ═══ ANALYTICS ═══
+// ═══ PERFORMANCE PAGE ═══
 function PerformancePage({ td }) {
-  const spStats = SP.map((s) => {
-    const d = td.filter((t) => t.salesId === s.id);
-    return {
-      ...s,
-      drives: d.length,
-      active: d.filter((t) => t.status === "active").length,
-      conv: d.length
-        ? Math.round((d.filter((t) => t.adfSent).length / d.length) * 100)
-        : 0,
-      sold: d.filter((t) => t.outcome === "sold").length,
-    };
-  });
-  const totalDrives = td.length,
-    totalSigned = td.filter((t) => t.signed).length,
-    totalAdf = td.filter((t) => t.adfSent).length,
-    totalSold = td.filter((t) => t.outcome === "sold").length;
-  const topVehicles = INVENTORY.map((v) => ({
-    ...v,
-    count: td.filter((t) => t.vehicleId === v.id).length,
-  }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 8);
+  const currentMonth = getCurrentMonthKey();
+  const [monthFilter, setMonthFilter] = useState(currentMonth);
+  const months = getAvailableMonths(td);
+  const filtered = td.filter((t) => getMonthKey(t.date) === monthFilter);
+
+  const totalDrives = filtered.length;
+  const totalSold = filtered.filter((t) => t.outcome === "sold").length;
+  const totalAdf = filtered.filter((t) => t.adfSent).length;
+
   const dailyData = useMemo(() => {
     const m = {};
-    td.forEach((t) => {
+    filtered.forEach((t) => {
       m[t.date] = (m[t.date] || 0) + 1;
     });
     return Object.entries(m).slice(-14);
-  }, [td]);
+  }, [filtered]);
   const maxD = Math.max(...dailyData.map((d) => d[1]), 1);
+
+  const topVehicles = INVENTORY.map((v) => ({
+    ...v,
+    count: filtered.filter((t) => t.vehicleId === v.id).length,
+  }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+
   return (
     <div>
-      <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 24px" }}>
-        Performance
-      </h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
+        <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>
+          Performance & Reporting
+        </h1>
+        <select
+          value={monthFilter}
+          onChange={(e) => setMonthFilter(e.target.value)}
+          style={{
+            padding: "8px 14px",
+            borderRadius: 10,
+            border: `1px solid ${C.border}`,
+            background: "#fff",
+            color: C.text,
+            fontSize: 13,
+            fontFamily: "'Outfit',sans-serif",
+            cursor: "pointer",
+          }}
+        >
+          {months.map((m) => (
+            <option key={m} value={m}>
+              {getMonthLabel(m)}
+            </option>
+          ))}
+        </select>
+      </div>
       <div
         style={{ display: "flex", gap: 14, marginBottom: 24, flexWrap: "wrap" }}
       >
         <Stat
-          label="Total Drives"
+          label="Test Drives"
           value={totalDrives}
           icon={I.car(C.textDim, 16)}
         />
         <Stat
-          label="Agreements"
-          value={totalSigned}
-          color={C.green}
-          icon={I.pen(C.textDim, 16)}
-        />
-        <Stat
-          label="CRM Leads"
-          value={totalAdf}
-          color={C.blue}
-          icon={I.send(C.textDim, 16)}
-        />
-        <Stat
-          label="Sold"
+          label="Cars Sold"
           value={totalSold}
           color={C.green}
           icon={I.dollar(C.textDim, 16)}
@@ -3765,7 +3699,14 @@ function PerformancePage({ td }) {
           color={C.purple}
           icon={I.trend(C.textDim, 16)}
         />
+        <Stat
+          label="CRM Leads"
+          value={totalAdf}
+          color={C.blue}
+          icon={I.send(C.textDim, 16)}
+        />
       </div>
+      <MonthComparison td={td} currentMonth={monthFilter} />
       <div
         className="resp-grid-2"
         style={{
@@ -3777,7 +3718,7 @@ function PerformancePage({ td }) {
       >
         <div style={{ ...C.glass, padding: 24 }}>
           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>
-            Drives per Day (14 Days)
+            Drives per Day
           </div>
           <div
             style={{
@@ -3808,7 +3749,7 @@ function PerformancePage({ td }) {
                     width: "100%",
                     height: (v / maxD) * 120,
                     borderRadius: "4px 4px 2px 2px",
-                    background: `linear-gradient(180deg,${C.accent},${C.accent}55)`,
+                    background: `linear-gradient(180deg,${C.accent},${C.accent}88)`,
                     minHeight: 4,
                   }}
                 />
@@ -3864,7 +3805,7 @@ function PerformancePage({ td }) {
                     width: 60,
                     height: 6,
                     borderRadius: 3,
-                    background: "rgba(255,255,255,0.06)",
+                    background: C.surfaceLight,
                     overflow: "hidden",
                   }}
                 >
@@ -3892,171 +3833,170 @@ function PerformancePage({ td }) {
             ))}
         </div>
       </div>
-      <h2 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 12px" }}>
-        Salesperson Breakdown
-      </h2>
-      <div
-        className="resp-grid-cards"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))",
-          gap: 14,
-        }}
-      >
-        {spStats.map((s) => (
-          <div key={s.id} style={{ ...C.glass, padding: 22 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 16,
-              }}
-            >
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 10,
-                  background: C.accent + "18",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 13,
-                  fontWeight: 800,
-                  color: C.accent,
-                }}
-              >
-                {s.initials}
-              </div>
-              <div>
-                <div style={{ fontWeight: 700 }}>{s.name}</div>
-                <Badge color={s.active ? C.green : C.textDim} sm>
-                  {s.active ? "On Floor" : "Off"}
-                </Badge>
-              </div>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                gap: 6,
-              }}
-            >
-              {[
-                ["Drives", s.drives, C.blue],
-                ["Active", s.active, C.green],
-                ["Sold", s.sold, C.green],
-                ["CRM", s.conv + "%", C.purple],
-              ].map(([l, v, c]) => (
-                <div
-                  key={l}
-                  style={{
-                    textAlign: "center",
-                    padding: 8,
-                    borderRadius: 8,
-                    background: "rgba(255,255,255,0.02)",
-                  }}
-                >
-                  <div style={{ fontSize: 18, fontWeight: 700, color: c }}>
-                    {v}
-                  </div>
-                  <div style={{ fontSize: 9, color: C.textDim, marginTop: 2 }}>
-                    {l}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      <SalespersonBarChart td={td} monthKey={monthFilter} />
     </div>
   );
 }
+
+// ═══ AGREEMENTS PAGE ═══
 function AgreementsPage({ td }) {
   const signed = td.filter((t) => t.signed);
   return (
     <div>
       <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 4px" }}>
-        Signed Agreements
+        Agreements
       </h1>
-      <p style={{ color: C.textDim, fontSize: 13, margin: "0 0 24px" }}>
-        {signed.length} agreements on file
+      <p style={{ color: C.textDim, fontSize: 13, margin: "0 0 20px" }}>
+        {signed.length} signed agreements
       </p>
-      <div
-        style={{
-          ...C.glass,
-          padding: "12px",
-          overflowX: "auto",
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
+      <div style={{ ...C.glass, padding: 14, overflowX: "auto" }}>
         <table
           style={{
             width: "100%",
             borderCollapse: "collapse",
             fontSize: 12,
-            minWidth: 650,
+            minWidth: 500,
           }}
         >
           <thead>
             <tr style={{ borderBottom: `1px solid ${C.border}` }}>
-              {[
-                "Customer",
-                "Phone",
-                "Vehicle",
-                "Sales",
-                "Signed",
-                "ID",
-                "CRM",
-              ].map((h) => (
-                <th
-                  key={h}
-                  style={{
-                    textAlign: "left",
-                    padding: "8px 10px",
-                    color: C.textDim,
-                    fontWeight: 600,
-                    fontSize: 9,
-                    textTransform: "uppercase",
-                    letterSpacing: 0.8,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {h}
-                </th>
-              ))}
+              {["Customer", "Vehicle", "Salesperson", "Date", "Status"].map(
+                (h) => (
+                  <th
+                    key={h}
+                    style={{
+                      textAlign: "left",
+                      padding: "8px 10px",
+                      color: C.textDim,
+                      fontWeight: 600,
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: 1,
+                    }}
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody>
-            {signed.map((t) => (
+            {signed.slice(0, 30).map((t) => (
               <tr key={t.id} style={{ borderBottom: `1px solid ${C.border}` }}>
-                <td style={{ padding: 12, fontWeight: 600 }}>{t.customer}</td>
-                <td style={{ padding: 12, color: C.textMuted, fontSize: 12 }}>
-                  {t.phone}
+                <td style={{ padding: "8px 10px", fontWeight: 600 }}>
+                  {t.customer}
                 </td>
-                <td style={{ padding: 12, color: C.textMuted }}>{t.vehicle}</td>
-                <td style={{ padding: 12, color: C.textMuted }}>
+                <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                  {t.vehicle}
+                </td>
+                <td style={{ padding: "8px 10px", color: C.textMuted }}>
                   {t.salesperson}
                 </td>
-                <td style={{ padding: 12 }}>
+                <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                  {t.signedAt}
+                </td>
+                <td style={{ padding: "8px 10px" }}>
                   <Badge color={C.green} sm>
-                    {t.signedAt || t.date}
+                    Signed
                   </Badge>
                 </td>
-                <td style={{ padding: 12 }}>
-                  <Badge color={C.green} sm>
-                    Verified
-                  </Badge>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ═══ CUSTOMERS PAGE ═══
+function CustomersPage({ td }) {
+  const customers = {};
+  td.forEach((t) => {
+    if (!customers[t.customer])
+      customers[t.customer] = {
+        name: t.customer,
+        phone: t.phone,
+        drives: 0,
+        lastDate: t.date,
+        sold: false,
+      };
+    customers[t.customer].drives++;
+    if (t.outcome === "sold") customers[t.customer].sold = true;
+    customers[t.customer].lastDate = t.date;
+  });
+  const list = Object.values(customers).sort((a, b) => b.drives - a.drives);
+  return (
+    <div>
+      <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 4px" }}>
+        Customers
+      </h1>
+      <p style={{ color: C.textDim, fontSize: 13, margin: "0 0 20px" }}>
+        {list.length} unique customers
+      </p>
+      <div style={{ ...C.glass, padding: 14, overflowX: "auto" }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            fontSize: 12,
+            minWidth: 500,
+          }}
+        >
+          <thead>
+            <tr style={{ borderBottom: `1px solid ${C.border}` }}>
+              {["Customer", "Phone", "Drives", "Last Visit", "Status"].map(
+                (h) => (
+                  <th
+                    key={h}
+                    style={{
+                      textAlign: "left",
+                      padding: "8px 10px",
+                      color: C.textDim,
+                      fontWeight: 600,
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: 1,
+                    }}
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {list.slice(0, 30).map((c) => (
+              <tr
+                key={c.name}
+                style={{ borderBottom: `1px solid ${C.border}` }}
+              >
+                <td style={{ padding: "8px 10px", fontWeight: 600 }}>
+                  {c.name}
                 </td>
-                <td style={{ padding: 12 }}>
-                  {t.adfSent ? (
-                    <Badge color={C.blue} sm>
-                      Delivered
+                <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                  {c.phone}
+                </td>
+                <td
+                  style={{
+                    padding: "8px 10px",
+                    fontWeight: 700,
+                    color: C.blue,
+                  }}
+                >
+                  {c.drives}
+                </td>
+                <td style={{ padding: "8px 10px", color: C.textMuted }}>
+                  {c.lastDate}
+                </td>
+                <td style={{ padding: "8px 10px" }}>
+                  {c.sold ? (
+                    <Badge color={C.green} sm>
+                      Sold
                     </Badge>
                   ) : (
-                    <Badge color={C.accent} sm>
-                      Pending
+                    <Badge color={C.textDim} sm>
+                      Lead
                     </Badge>
                   )}
                 </td>
@@ -4068,89 +4008,8 @@ function AgreementsPage({ td }) {
     </div>
   );
 }
-function CustomersPage({ td }) {
-  const custMap = {};
-  td.forEach((t) => {
-    if (!custMap[t.customer])
-      custMap[t.customer] = {
-        name: t.customer,
-        phone: t.phone,
-        drives: [],
-        salespersons: new Set(),
-      };
-    custMap[t.customer].drives.push(t);
-    custMap[t.customer].salespersons.add(t.salesperson);
-  });
-  const customers = Object.values(custMap).sort(
-    (a, b) => b.drives.length - a.drives.length,
-  );
-  return (
-    <div>
-      <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 4px" }}>
-        Customer Database
-      </h1>
-      <p style={{ color: C.textDim, fontSize: 13, margin: "0 0 24px" }}>
-        {customers.length} unique customers from signed agreements
-      </p>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))",
-          gap: 12,
-        }}
-      >
-        {customers.map((c) => (
-          <div key={c.name} style={{ ...C.glass, padding: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                marginBottom: 12,
-              }}
-            >
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 700 }}>{c.name}</div>
-                <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
-                  {c.phone}
-                </div>
-              </div>
-              <Badge sm>
-                {c.drives.length} drive{c.drives.length > 1 ? "s" : ""}
-              </Badge>
-            </div>
-            <div style={{ fontSize: 12, color: C.textMuted, marginBottom: 8 }}>
-              Vehicles test driven:
-            </div>
-            {c.drives.map((d, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "6px 0",
-                  borderBottom:
-                    i < c.drives.length - 1 ? `1px solid ${C.border}` : "none",
-                  fontSize: 12,
-                }}
-              >
-                <span style={{ fontWeight: 600, color: C.text }}>
-                  {d.vehicle}
-                </span>
-                <span style={{ color: C.textDim }}>
-                  {d.date} · {d.salesperson.split(" ")[0]}
-                </span>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
-// ═══ MY DRIVES WITH OUTCOME ═══
+// ═══ MY DRIVES (with sale logging) ═══
 function MyDrives({ drives, setTD }) {
   const markOutcome = (id, outcome) => {
     setTD((p) => p.map((t) => (t.id === id ? { ...t, outcome } : t)));
@@ -4188,6 +4047,8 @@ function MyDrives({ drives, setTD }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 8,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -4198,12 +4059,12 @@ function MyDrives({ drives, setTD }) {
                     borderRadius: 8,
                     background:
                       t.status === "active"
-                        ? C.green + "15"
+                        ? C.green + "12"
                         : t.outcome === "sold"
-                          ? C.green + "15"
+                          ? C.green + "12"
                           : t.outcome === "not_sold"
-                            ? "rgba(255,255,255,0.04)"
-                            : C.accent + "15",
+                            ? C.surfaceLight
+                            : C.accent + "12",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -4247,21 +4108,13 @@ function MyDrives({ drives, setTD }) {
                       style={{
                         padding: "6px 14px",
                         borderRadius: 8,
-                        background: C.green + "18",
+                        background: C.green + "12",
                         border: `1px solid ${C.green}33`,
                         color: C.green,
                         fontSize: 11,
                         fontWeight: 700,
                         cursor: "pointer",
                         fontFamily: "'Outfit',sans-serif",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = C.green;
-                        e.target.style.color = C.bg;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = C.green + "18";
-                        e.target.style.color = C.green;
                       }}
                     >
                       Sold
@@ -4271,21 +4124,13 @@ function MyDrives({ drives, setTD }) {
                       style={{
                         padding: "6px 14px",
                         borderRadius: 8,
-                        background: "rgba(255,255,255,0.04)",
+                        background: C.surfaceLight,
                         border: `1px solid ${C.border}`,
                         color: C.textMuted,
                         fontSize: 11,
                         fontWeight: 700,
                         cursor: "pointer",
                         fontFamily: "'Outfit',sans-serif",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = C.red + "18";
-                        e.target.style.color = C.red;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = "rgba(255,255,255,0.04)";
-                        e.target.style.color = C.textMuted;
                       }}
                     >
                       No Sale
@@ -4301,28 +4146,218 @@ function MyDrives({ drives, setTD }) {
   );
 }
 
+// ═══ COMMISSION PAGE (Sales) ═══
+function CommissionPage({ td, salesId }) {
+  const currentMonth = getCurrentMonthKey();
+  const [monthFilter, setMonthFilter] = useState(currentMonth);
+  const months = getAvailableMonths(td);
+  const myDrives = td.filter(
+    (t) => t.salesId === salesId && getMonthKey(t.date) === monthFilter,
+  );
+  const sold = myDrives.filter((t) => t.outcome === "sold").length;
+  const tier = getCommTier(sold);
+  const grossEst = sold * AVG_GROSS_PER_CAR;
+  const commEst = Math.round(grossEst * tier.rate);
+  const totalEst = commEst + tier.bonus;
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
+        <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>
+          Commission Tracker
+        </h1>
+        <select
+          value={monthFilter}
+          onChange={(e) => setMonthFilter(e.target.value)}
+          style={{
+            padding: "8px 14px",
+            borderRadius: 10,
+            border: `1px solid ${C.border}`,
+            background: "#fff",
+            color: C.text,
+            fontSize: 13,
+            fontFamily: "'Outfit',sans-serif",
+            cursor: "pointer",
+          }}
+        >
+          {months.map((m) => (
+            <option key={m} value={m}>
+              {getMonthLabel(m)}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div
+        style={{ display: "flex", gap: 14, marginBottom: 24, flexWrap: "wrap" }}
+      >
+        <Stat
+          label="Cars Sold"
+          value={sold}
+          color={C.green}
+          icon={I.dollar(C.green, 16)}
+        />
+        <Stat
+          label="Est. Gross"
+          value={grossEst}
+          prefix="$"
+          color={C.blue}
+          icon={I.trend(C.textDim, 16)}
+        />
+        <Stat
+          label="Commission"
+          value={commEst}
+          prefix="$"
+          color={C.accent}
+          icon={I.dollar(C.accent, 16)}
+        />
+        <Stat
+          label="Tier Bonus"
+          value={tier.bonus}
+          prefix="$"
+          color={C.purple}
+          icon={I.check(C.purple, 16)}
+        />
+      </div>
+
+      <div style={{ ...C.glass, padding: 24, marginBottom: 20 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>
+          Estimated Total Payout
+        </div>
+        <div style={{ fontSize: 36, fontWeight: 800, ...C.gradText }}>
+          ${totalEst.toLocaleString()}
+        </div>
+        <div style={{ fontSize: 13, color: C.textMuted, marginTop: 4 }}>
+          at {(tier.rate * 100).toFixed(0)}% commission rate ({tier.label})
+        </div>
+      </div>
+
+      <div style={{ ...C.glass, padding: 24, marginBottom: 20 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>
+          Commission Tiers
+        </div>
+        {COMMISSION_TIERS.map((t, i) => {
+          const isActive = sold >= t.min && sold <= t.max;
+          return (
+            <div
+              key={i}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                padding: "12px 16px",
+                borderRadius: 12,
+                marginBottom: 6,
+                background: isActive ? C.accent + "08" : "transparent",
+                border: isActive
+                  ? `1px solid ${C.accent}22`
+                  : `1px solid transparent`,
+              }}
+            >
+              <div style={{ width: 36, textAlign: "center" }}>
+                {isActive ? (
+                  I.check(C.green, 18)
+                ) : (
+                  <span style={{ fontSize: 14, color: C.textDim }}>—</span>
+                )}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div
+                  style={{
+                    fontWeight: 600,
+                    fontSize: 14,
+                    color: isActive ? C.text : C.textMuted,
+                  }}
+                >
+                  {t.label}
+                </div>
+                <div style={{ fontSize: 12, color: C.textDim }}>
+                  {(t.rate * 100).toFixed(0)}% of gross + ${t.bonus} bonus
+                </div>
+              </div>
+              {isActive && <Badge color={C.accent}>Current</Badge>}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ ...C.glass, padding: 24 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>
+          Sales This Month
+        </div>
+        {myDrives.filter((t) => t.outcome === "sold").length === 0 ? (
+          <div style={{ textAlign: "center", padding: 20, color: C.textDim }}>
+            No sales recorded yet this month
+          </div>
+        ) : (
+          myDrives
+            .filter((t) => t.outcome === "sold")
+            .map((t) => (
+              <div
+                key={t.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "10px 0",
+                  borderBottom: `1px solid ${C.border}`,
+                }}
+              >
+                {I.dollar(C.green, 16)}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13 }}>
+                    {t.customer}
+                  </div>
+                  <div style={{ fontSize: 12, color: C.textMuted }}>
+                    {t.vehicle} · {t.date}
+                  </div>
+                </div>
+                <Badge color={C.green} sm>
+                  Sold
+                </Badge>
+              </div>
+            ))
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ═══ PORTALS ═══
 function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
   const [view, setView] = useState("dashboard");
+  const currentMonth = getCurrentMonthKey();
+  const [monthFilter, setMonthFilter] = useState(currentMonth);
+  const months = getAvailableMonths(td);
   const nav = [
     { id: "dashboard", icon: I.grid(C.textMuted, 16), label: "Dashboard" },
     { id: "live", icon: I.clock(C.textMuted, 16), label: "Live Tracking" },
-    { id: "drives30", icon: I.cal(C.textMuted, 16), label: "Last 30 Days" },
+    { id: "performance", icon: I.trend(C.textMuted, 16), label: "Performance" },
+    { id: "drives", icon: I.cal(C.textMuted, 16), label: "All Drives" },
     { id: "agreements", icon: I.pen(C.textMuted, 16), label: "Agreements" },
     { id: "customers", icon: I.user(C.textMuted, 16), label: "Customers" },
-    { id: "performance", icon: I.trend(C.textMuted, 16), label: "Performance" },
     { id: "inventory", icon: I.tag(C.textMuted, 16), label: "Inventory" },
     { id: "team", icon: I.users(C.textMuted, 16), label: "Team" },
   ];
+  const filtered = td.filter((t) => getMonthKey(t.date) === monthFilter);
   const active = td.filter((t) => t.status === "active");
   const content = () => {
     if (view === "inventory") return <InvView td={td} />;
     if (view === "live") return <LiveDashboard td={td} setTD={setTD} />;
-    if (view === "drives30")
+    if (view === "drives")
       return (
         <div>
           <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 24px" }}>
-            Test Drives — Last 30 Days
+            All Test Drives
           </h1>
           <TDTable drives={td} />
         </div>
@@ -4345,6 +4380,10 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
           >
             {SP.map((s) => {
               const d = td.filter((t) => t.salesId === s.id);
+              const monthDrives = filtered.filter((t) => t.salesId === s.id);
+              const monthSold = monthDrives.filter(
+                (t) => t.outcome === "sold",
+              ).length;
               return (
                 <div key={s.id} style={{ ...C.glass, padding: 22 }}>
                   <div
@@ -4360,7 +4399,7 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
                         width: 40,
                         height: 40,
                         borderRadius: 10,
-                        background: C.accent + "18",
+                        background: C.accent + "12",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -4381,17 +4420,14 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
+                      gridTemplateColumns: "1fr 1fr 1fr",
                       gap: 8,
                     }}
                   >
                     {[
-                      ["Total Drives", d.length, C.blue],
-                      [
-                        "Active",
-                        d.filter((t) => t.status === "active").length,
-                        C.green,
-                      ],
+                      ["All Time", d.length, C.blue],
+                      ["This Month", monthDrives.length, C.accent],
+                      ["Sold", monthSold, C.green],
                     ].map(([l, v, c]) => (
                       <div
                         key={l}
@@ -4399,7 +4435,7 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
                           textAlign: "center",
                           padding: 10,
                           borderRadius: 10,
-                          background: "rgba(255,255,255,0.02)",
+                          background: C.surface,
                         }}
                       >
                         <div
@@ -4409,7 +4445,7 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
                         </div>
                         <div
                           style={{
-                            fontSize: 10,
+                            fontSize: 9,
                             color: C.textDim,
                             marginTop: 3,
                           }}
@@ -4425,16 +4461,52 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
           </div>
         </div>
       );
+    // DASHBOARD - Current Month focus
+    const sold = filtered.filter((t) => t.outcome === "sold").length;
     return (
       <div>
-        <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>
-            Dashboard
-          </h1>
-          <p style={{ color: C.textDim, fontSize: 13, margin: "4px 0 0" }}>
-            Magnetism Motors — Lawrenceville, GA
-          </p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 24,
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
+          <div>
+            <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>
+              Dashboard
+            </h1>
+            <p style={{ color: C.textDim, fontSize: 13, margin: "4px 0 0" }}>
+              Magnetism Motors — Lawrenceville, GA
+            </p>
+          </div>
+          <select
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+            style={{
+              padding: "8px 14px",
+              borderRadius: 10,
+              border: `1px solid ${C.border}`,
+              background: "#fff",
+              color: C.text,
+              fontSize: 13,
+              fontFamily: "'Outfit',sans-serif",
+              cursor: "pointer",
+            }}
+          >
+            {months.map((m) => (
+              <option key={m} value={m}>
+                {getMonthLabel(m)}
+              </option>
+            ))}
+          </select>
         </div>
+
+        <TodayTestDrives td={td} setTD={setTD} />
+
         <div
           style={{
             display: "flex",
@@ -4444,9 +4516,10 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
           }}
         >
           <Stat
-            label="Total Drives"
-            value={td.length}
+            label="Test Drives"
+            value={filtered.length}
             icon={I.car(C.textDim, 16)}
+            sub={getMonthLabel(monthFilter)}
           />
           <Stat
             label="Active Now"
@@ -4455,86 +4528,24 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
             icon={I.dot(C.green, 10)}
           />
           <Stat
-            label="Agreements"
-            value={td.filter((t) => t.signed).length}
-            color={C.blue}
-            icon={I.pen(C.textDim, 16)}
+            label="Cars Sold"
+            value={sold}
+            color={C.green}
+            icon={I.dollar(C.textDim, 16)}
           />
           <Stat
-            label="CRM Delivered"
-            value={td.filter((t) => t.adfSent).length}
+            label="Close Rate"
+            value={
+              filtered.length ? Math.round((sold / filtered.length) * 100) : 0
+            }
+            suffix="%"
             color={C.purple}
-            icon={I.send(C.textDim, 16)}
+            icon={I.trend(C.textDim, 16)}
           />
         </div>
-        {active.length > 0 && (
-          <div style={{ ...C.glass, padding: 22, marginBottom: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 14,
-              }}
-            >
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: C.green,
-                  boxShadow: `0 0 8px ${C.green}`,
-                }}
-              />
-              <span style={{ fontWeight: 700 }}>Active Test Drives</span>
-            </div>
-            {active.map((t) => {
-              const veh = INVENTORY.find((v) => v.id === t.vehicleId);
-              return (
-                <div
-                  key={t.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    padding: "12px 14px",
-                    borderRadius: 12,
-                    background: C.green + "08",
-                    border: `1px solid ${C.green}18`,
-                    marginBottom: 6,
-                  }}
-                >
-                  <div style={{ opacity: 0.5 }}>{I.car(C.green, 18)}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600 }}>{t.customer}</div>
-                    <div style={{ fontSize: 12, color: C.textMuted }}>
-                      {t.vehicle} · {t.salesperson}
-                      {veh && veh.daysOnLot >= 60 ? (
-                        <span style={{ color: C.amber, fontWeight: 700 }}>
-                          {" "}
-                          · {veh.daysOnLot}d on lot
-                        </span>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div
-                      style={{ fontSize: 13, fontWeight: 600, color: C.green }}
-                    >
-                      Out since {t.timeIn}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-        <h2 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 12px" }}>
-          Recent Activity
-        </h2>
-        <TDTable drives={td.slice(0, 10)} />
+
+        <MonthComparison td={td} currentMonth={monthFilter} />
+        <SalespersonBarChart td={td} monthKey={monthFilter} />
       </div>
     );
   };
@@ -4557,18 +4568,24 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
 
 function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
   const [view, setView] = useState("floor");
+  const currentMonth = getCurrentMonthKey();
+  const [monthFilter, setMonthFilter] = useState(currentMonth);
+  const months = getAvailableMonths(td);
   const nav = [
     { id: "floor", icon: I.grid(C.textMuted, 16), label: "Floor View" },
     { id: "live", icon: I.clock(C.textMuted, 16), label: "Live Tracking" },
+    { id: "performance", icon: I.trend(C.textMuted, 16), label: "Performance" },
     { id: "drives", icon: I.car(C.textMuted, 16), label: "All Drives" },
     { id: "agreements", icon: I.pen(C.textMuted, 16), label: "Agreements" },
     { id: "team", icon: I.users(C.textMuted, 16), label: "Salespeople" },
     { id: "inventory", icon: I.tag(C.textMuted, 16), label: "Inventory" },
   ];
   const active = td.filter((t) => t.status === "active");
+  const filtered = td.filter((t) => getMonthKey(t.date) === monthFilter);
   const content = () => {
     if (view === "inventory") return <InvView td={td} />;
     if (view === "live") return <LiveDashboard td={td} setTD={setTD} />;
+    if (view === "performance") return <PerformancePage td={td} />;
     if (view === "drives")
       return (
         <div>
@@ -4602,7 +4619,7 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
                   width: 38,
                   height: 38,
                   borderRadius: 10,
-                  background: C.blue + "18",
+                  background: C.blue + "12",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -4616,7 +4633,13 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600 }}>{s.name}</div>
                 <div style={{ fontSize: 12, color: C.textMuted }}>
-                  {td.filter((t) => t.salesId === s.id).length} drives
+                  {td.filter((t) => t.salesId === s.id).length} drives ·{" "}
+                  {
+                    filtered.filter(
+                      (t) => t.salesId === s.id && t.outcome === "sold",
+                    ).length
+                  }{" "}
+                  sold this month
                 </div>
               </div>
               <Badge color={s.active ? C.green : C.textDim} sm>
@@ -4626,13 +4649,45 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
           ))}
         </div>
       );
+    // FLOOR VIEW
+    const sold = filtered.filter((t) => t.outcome === "sold").length;
     return (
       <div>
-        <div style={{ marginBottom: 28 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 24,
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
           <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>
             Floor View
           </h1>
+          <select
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+            style={{
+              padding: "8px 14px",
+              borderRadius: 10,
+              border: `1px solid ${C.border}`,
+              background: "#fff",
+              color: C.text,
+              fontSize: 13,
+              fontFamily: "'Outfit',sans-serif",
+              cursor: "pointer",
+            }}
+          >
+            {months.map((m) => (
+              <option key={m} value={m}>
+                {getMonthLabel(m)}
+              </option>
+            ))}
+          </select>
         </div>
+        <TodayTestDrives td={td} setTD={setTD} />
         <div
           style={{
             display: "flex",
@@ -4648,65 +4703,19 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
             icon={I.dot(C.green, 10)}
           />
           <Stat
-            label="Today"
-            value={td.filter((t) => t.date === td[0]?.date).length}
+            label="This Month"
+            value={filtered.length}
             icon={I.car(C.textDim, 16)}
           />
+          <Stat
+            label="Sold"
+            value={sold}
+            color={C.green}
+            icon={I.dollar(C.textDim, 16)}
+          />
         </div>
-        {active.length > 0 && (
-          <div style={{ ...C.glass, padding: 22, marginBottom: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 14,
-              }}
-            >
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: C.green,
-                  boxShadow: `0 0 8px ${C.green}`,
-                }}
-              />
-              <span style={{ fontWeight: 700 }}>On Drive</span>
-            </div>
-            {active.map((t) => (
-              <div
-                key={t.id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 14,
-                  padding: "12px 14px",
-                  borderRadius: 12,
-                  background: C.green + "06",
-                  marginBottom: 6,
-                }}
-              >
-                <div style={{ opacity: 0.5 }}>{I.car(C.green, 18)}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600 }}>
-                    {t.customer} — {t.vehicle}
-                  </div>
-                  <div style={{ fontSize: 12, color: C.textMuted }}>
-                    with {t.salesperson}
-                  </div>
-                </div>
-                <div style={{ fontWeight: 600, color: C.green, fontSize: 13 }}>
-                  Since {t.timeIn}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        <h2 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 12px" }}>
-          Recent
-        </h2>
-        <TDTable drives={td.slice(0, 10)} />
+        <MonthComparison td={td} currentMonth={monthFilter} />
+        <SalespersonBarChart td={td} monthKey={monthFilter} />
       </div>
     );
   };
@@ -4729,14 +4738,19 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
 
 function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
   const [view, setView] = useState("dashboard");
+  const currentMonth = getCurrentMonthKey();
+  const [monthFilter, setMonthFilter] = useState(currentMonth);
+  const months = getAvailableMonths(td);
   const nav = [
     { id: "dashboard", icon: I.home(C.textMuted, 16), label: "My Dashboard" },
     { id: "new", icon: I.plus(C.textMuted, 16), label: "New Test Drive" },
     { id: "live", icon: I.clock(C.textMuted, 16), label: "Live Tracking" },
     { id: "drives", icon: I.car(C.textMuted, 16), label: "My Drives" },
+    { id: "commission", icon: I.dollar(C.textMuted, 16), label: "Commission" },
     { id: "inventory", icon: I.tag(C.textMuted, 16), label: "Inventory" },
   ];
   const my = td.filter((t) => t.salesId === 1);
+  const myMonth = my.filter((t) => getMonthKey(t.date) === monthFilter);
   const content = () => {
     if (view === "inventory") return <InvView td={td} />;
     if (view === "new")
@@ -4745,14 +4759,53 @@ function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
       );
     if (view === "live") return <LiveDashboard td={td} setTD={setTD} />;
     if (view === "drives") return <MyDrives drives={my} setTD={setTD} />;
-    const sold = my.filter((t) => t.outcome === "sold").length;
+    if (view === "commission") return <CommissionPage td={td} salesId={1} />;
+    const sold = myMonth.filter((t) => t.outcome === "sold").length;
+    const tier = getCommTier(sold);
     return (
       <div>
-        <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>
-            Welcome back, {user.name.split(" ")[0]}
-          </h1>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 24,
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
+          <div>
+            <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>
+              Welcome back, {user.name.split(" ")[0]}
+            </h1>
+            <p style={{ color: C.textDim, fontSize: 13, margin: "4px 0 0" }}>
+              {getMonthLabel(monthFilter)}
+            </p>
+          </div>
+          <select
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+            style={{
+              padding: "8px 14px",
+              borderRadius: 10,
+              border: `1px solid ${C.border}`,
+              background: "#fff",
+              color: C.text,
+              fontSize: 13,
+              fontFamily: "'Outfit',sans-serif",
+              cursor: "pointer",
+            }}
+          >
+            {months.map((m) => (
+              <option key={m} value={m}>
+                {getMonthLabel(m)}
+              </option>
+            ))}
+          </select>
         </div>
+
+        <TodayTestDrives td={td} setTD={setTD} />
+
         <div
           style={{
             display: "flex",
@@ -4763,8 +4816,9 @@ function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
         >
           <Stat
             label="My Drives"
-            value={my.length}
+            value={myMonth.length}
             icon={I.car(C.textDim, 16)}
+            sub={getMonthLabel(monthFilter)}
           />
           <Stat
             label="Active"
@@ -4780,12 +4834,72 @@ function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
           />
           <Stat
             label="Close Rate"
-            value={my.length ? Math.round((sold / my.length) * 100) : 0}
+            value={
+              myMonth.length ? Math.round((sold / myMonth.length) * 100) : 0
+            }
             suffix="%"
             color={C.purple}
             icon={I.trend(C.textDim, 16)}
           />
         </div>
+
+        {/* Commission Summary Card */}
+        <div
+          style={{
+            ...C.glass,
+            padding: 20,
+            marginBottom: 20,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 14,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 12,
+                color: C.textMuted,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: 1,
+                marginBottom: 4,
+              }}
+            >
+              Estimated Commission
+            </div>
+            <div style={{ fontSize: 28, fontWeight: 800, ...C.gradText }}>
+              $
+              {(
+                Math.round(sold * AVG_GROSS_PER_CAR * tier.rate) + tier.bonus
+              ).toLocaleString()}
+            </div>
+            <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
+              {tier.label} · {(tier.rate * 100).toFixed(0)}% rate
+              {tier.bonus > 0 ? ` + $${tier.bonus} bonus` : ""}
+            </div>
+          </div>
+          <button
+            onClick={() => setView("commission")}
+            style={{
+              padding: "10px 20px",
+              borderRadius: 10,
+              background: C.accent,
+              border: "none",
+              color: "#fff",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+              fontFamily: "'Outfit',sans-serif",
+            }}
+          >
+            View Details
+          </button>
+        </div>
+
+        <MonthComparison td={my} currentMonth={monthFilter} />
+
         {my.filter((t) => t.outcome === null && t.status === "completed")
           .length > 0 && (
           <div
@@ -4813,8 +4927,8 @@ function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
                   marginLeft: "auto",
                   padding: "6px 14px",
                   borderRadius: 8,
-                  background: C.accent + "18",
-                  border: `1px solid ${C.accent}33`,
+                  background: C.accent + "12",
+                  border: `1px solid ${C.accent}28`,
                   color: C.accent,
                   fontSize: 11,
                   fontWeight: 700,
@@ -4827,6 +4941,7 @@ function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
             </div>
           </div>
         )}
+
         <h2 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 12px" }}>
           Recent
         </h2>
@@ -4908,6 +5023,7 @@ const RESP_CSS = `
   .resp-table-wrap th,.resp-table-wrap td{padding:8px 6px !important}
   .resp-inv-filters{flex-direction:column !important;align-items:stretch !important}
   .resp-inv-header{flex-direction:column !important;gap:12px !important}
+  .feat-grid{grid-template-columns:1fr !important}
 }
 `;
 
