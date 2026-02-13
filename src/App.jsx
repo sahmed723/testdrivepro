@@ -3000,6 +3000,7 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
   const [sigData, setSigData] = useState(null);
   const [started, setStarted] = useState(false);
   const [phone, setPhone] = useState("");
+  const [vehQ, setVehQ] = useState("");
   const steps = ["Upload ID", "Select Vehicle", "Sign & Go"];
   const verify = () => {
     setVerifying(true);
@@ -3325,79 +3326,243 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
         </div>
       )}
       {step === 1 && (
-        <div>
-          <h2 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 16px" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 4px" }}>
             Select Vehicle
           </h2>
-          <div
-            className="resp-grid-cards"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))",
-              gap: 10,
-            }}
-          >
-            {INVENTORY.filter((v) => v.status === "available").map((v) => (
-              <div
-                key={v.id}
-                onClick={() => setSel(v.id)}
-                style={{
-                  ...C.glass,
-                  padding: 0,
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  borderColor: sel === v.id ? C.accent : C.border,
-                  boxShadow: sel === v.id ? `0 0 20px ${C.accent}22` : "none",
-                }}
-              >
-                {v.img && (
-                  <img
-                    src={v.img}
-                    alt=""
-                    style={{ width: "100%", height: 90, objectFit: "cover" }}
-                    onError={(e) => (e.target.style.display = "none")}
-                  />
-                )}
-                <div style={{ padding: "10px 14px" }}>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <span style={{ fontWeight: 700, fontSize: 13 }}>
-                      {v.year} {v.make} {v.model}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 700,
-                        color: dolAge(v.daysOnLot),
-                      }}
-                    >
-                      {v.daysOnLot}d
-                    </span>
+          <p style={{ color: C.textDim, fontSize: 13, margin: "0 0 20px" }}>
+            Enter stock number or search by make, model, year
+          </p>
+          <div style={{ position: "relative", marginBottom: 16 }}>
+            <div
+              style={{
+                position: "absolute",
+                left: 14,
+                top: "50%",
+                transform: "translateY(-50%)",
+                opacity: 0.4,
+              }}
+            >
+              {I.tag(C.textMuted, 16)}
+            </div>
+            <input
+              type="text"
+              value={vehQ}
+              onChange={(e) => {
+                const val = e.target.value;
+                setVehQ(val);
+                const ex = INVENTORY.find(
+                  (v) => v.stock.toLowerCase() === val.trim().toLowerCase(),
+                );
+                setSel(ex ? ex.id : null);
+              }}
+              placeholder="Stock # or search (e.g. FE008412, Bronco, Porsche)"
+              style={{
+                width: "100%",
+                padding: "14px 16px 14px 42px",
+                borderRadius: 12,
+                border: `1px solid ${vehQ && !sel ? C.accent + "66" : C.border}`,
+                background: "rgba(255,255,255,0.04)",
+                color: C.text,
+                fontSize: 14,
+                fontFamily: "'Outfit',sans-serif",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              autoFocus
+            />
+          </div>
+          {(() => {
+            const q = vehQ.trim().toLowerCase();
+            if (!q)
+              return (
+                <div style={{ ...C.glass, padding: 32, textAlign: "center" }}>
+                  <div style={{ opacity: 0.3, marginBottom: 8 }}>
+                    {I.car(C.textDim, 32)}
                   </div>
-                  <div style={{ fontSize: 11, color: C.textMuted }}>
-                    {v.trim}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 700,
-                      ...C.gradText,
-                      marginTop: 6,
-                    }}
-                  >
-                    {fmt(v.price)}
+                  <div style={{ color: C.textDim, fontSize: 13 }}>
+                    Type a stock number to look up a vehicle instantly
                   </div>
                 </div>
+              );
+            const matches = INVENTORY.filter((v) => {
+              const hay =
+                `${v.stock} ${v.year} ${v.make} ${v.model} ${v.trim} ${v.color} ${v.vin}`.toLowerCase();
+              return hay.includes(q);
+            });
+            if (matches.length === 0)
+              return (
+                <div
+                  style={{
+                    ...C.glass,
+                    padding: 24,
+                    textAlign: "center",
+                    borderLeft: `3px solid ${C.red}`,
+                  }}
+                >
+                  <div style={{ fontWeight: 600, color: C.red }}>
+                    No vehicle found
+                  </div>
+                  <div
+                    style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}
+                  >
+                    Check the stock number or try a different search
+                  </div>
+                </div>
+              );
+            return (
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {matches.slice(0, 6).map((v) => {
+                  const active = sel === v.id;
+                  const dc = dolAge(v.daysOnLot);
+                  return (
+                    <div
+                      key={v.id}
+                      onClick={() => setSel(v.id)}
+                      style={{
+                        ...C.glass,
+                        padding: "14px 18px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 14,
+                        borderColor: active ? C.accent : C.border,
+                        boxShadow: active ? `0 0 20px ${C.accent}15` : "none",
+                        transition: "all 0.2s",
+                      }}
+                    >
+                      {active && (
+                        <div
+                          style={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            background: C.accent,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {I.check(C.bg, 12)}
+                        </div>
+                      )}
+                      {!active && (
+                        <div
+                          style={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            border: `2px solid ${C.border}`,
+                            flexShrink: 0,
+                          }}
+                        />
+                      )}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          <span style={{ fontWeight: 700, fontSize: 14 }}>
+                            {v.year} {v.make} {v.model}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: 10,
+                              padding: "2px 8px",
+                              borderRadius: 100,
+                              background: dc + "14",
+                              color: dc,
+                              fontWeight: 700,
+                              border: `1px solid ${dc}22`,
+                            }}
+                          >
+                            {v.daysOnLot}d
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 12,
+                            color: C.textMuted,
+                            marginTop: 2,
+                          }}
+                        >
+                          {v.trim} · {v.color}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right", flexShrink: 0 }}>
+                        <div
+                          style={{
+                            fontWeight: 700,
+                            fontSize: 14,
+                            ...C.gradText,
+                          }}
+                        >
+                          {fmt(v.price)}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 10,
+                            color: C.textDim,
+                            fontFamily: "'Courier New',monospace",
+                            marginTop: 2,
+                          }}
+                        >
+                          #{v.stock}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                {matches.length > 6 && (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      fontSize: 12,
+                      color: C.textDim,
+                      padding: 8,
+                    }}
+                  >
+                    +{matches.length - 6} more — refine your search
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            );
+          })()}
           {sel && (
-            <div style={{ textAlign: "center", marginTop: 20 }}>
+            <div style={{ marginTop: 16 }}>
+              <div
+                style={{
+                  ...C.glass,
+                  padding: 16,
+                  marginBottom: 16,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  borderLeft: `3px solid ${C.green}`,
+                }}
+              >
+                {I.check(C.green, 16)}
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontWeight: 700, fontSize: 13 }}>
+                    Selected:
+                  </span>{" "}
+                  <span style={{ color: C.textMuted, fontSize: 13 }}>
+                    {INVENTORY.find((v) => v.id === sel)?.year}{" "}
+                    {INVENTORY.find((v) => v.id === sel)?.make}{" "}
+                    {INVENTORY.find((v) => v.id === sel)?.model} — Stock #
+                    {INVENTORY.find((v) => v.id === sel)?.stock}
+                  </span>
+                </div>
+              </div>
               <button
                 onClick={() => setStep(2)}
                 style={{
-                  padding: "14px 40px",
+                  width: "100%",
+                  padding: "14px",
                   borderRadius: 100,
                   background: C.text,
                   border: "none",
