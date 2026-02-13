@@ -400,6 +400,35 @@ const I = {
       <polyline points="10,9 9,9 8,9" />
     </svg>
   ),
+  sun: (c = "#333", s = 16) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="5" />
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+    </svg>
+  ),
+  moon: (c = "#333", s = 16) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={c}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+    </svg>
+  ),
 };
 
 // ═══ INVENTORY ═══
@@ -773,7 +802,7 @@ const dolLabel = (d) =>
   d >= 90 ? "Critical" : d >= 60 ? "Aging" : d >= 30 ? "Watch" : "Fresh";
 
 // ═══ WHITE THEME ═══
-const C = {
+const LIGHT = {
   bg: "#ffffff",
   surface: "#f8f9fb",
   surfaceLight: "#f1f3f5",
@@ -801,7 +830,58 @@ const C = {
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   },
+  sidebarBg: "#ffffff",
+  headerBg: "#ffffff",
+  inputBg: "#ffffff",
+  cardBg: "#ffffff",
+  overlayBg: "rgba(0,0,0,0.3)",
+  signatureBg: "#fff",
+  signatureStroke: "#111",
+  contractBg: "#fff",
+  contractText: "#111",
 };
+const DARK = {
+  bg: "#050507",
+  surface: "#0c0c10",
+  surfaceLight: "#141418",
+  border: "rgba(255,255,255,0.06)",
+  borderLight: "rgba(255,255,255,0.1)",
+  text: "#f5f5f7",
+  textMuted: "#8e8e93",
+  textDim: "#555",
+  accent: "#c94050",
+  accentHover: "#b3384a",
+  accentLight: "rgba(201,64,80,0.15)",
+  green: "#30d158",
+  red: "#ff453a",
+  blue: "#0a84ff",
+  purple: "#bf5af2",
+  amber: "#ff9f0a",
+  glass: {
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.06)",
+    borderRadius: 14,
+    boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+  },
+  gradText: {
+    background: "linear-gradient(135deg, #c94050, #e8788a)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+  sidebarBg: "#0c0c10",
+  headerBg: "#0c0c10",
+  inputBg: "rgba(255,255,255,0.04)",
+  cardBg: "rgba(255,255,255,0.03)",
+  overlayBg: "rgba(0,0,0,0.6)",
+  signatureBg: "#1a1a2e",
+  signatureStroke: "#f5f5f7",
+  contractBg: "#111",
+  contractText: "#eee",
+};
+const C = { ...LIGHT };
+function applyTheme(isDark) {
+  Object.assign(C, isDark ? DARK : LIGHT);
+}
 
 // ═══ MONTH UTILS ═══
 const getMonthKey = (dateStr) => {
@@ -1254,7 +1334,7 @@ function AlertToast({ alerts, onDismiss }) {
         <div
           key={i}
           style={{
-            background: "#fff",
+            background: C.cardBg,
             border: `1px solid ${C.amber}44`,
             borderRadius: 12,
             padding: "14px 18px",
@@ -1895,7 +1975,7 @@ function LandingPage({ onLogin }) {
   return (
     <div
       style={{
-        background: "#fff",
+        background: C.cardBg,
         color: C.text,
         fontFamily: "'Outfit',sans-serif",
         minHeight: "100vh",
@@ -2275,7 +2355,7 @@ function LoginPage({ onLogin, onBack }) {
             marginTop: 24,
             padding: "20px 24px",
             borderRadius: 14,
-            background: "#fff",
+            background: C.cardBg,
             border: `1px solid ${C.border}`,
           }}
         >
@@ -2376,7 +2456,16 @@ function useIsMobile(bp = 768) {
 }
 
 // ═══ APP SHELL ═══
-function Shell({ user, onLogout, children, nav, active, setView }) {
+function Shell({
+  user,
+  onLogout,
+  children,
+  nav,
+  active,
+  setView,
+  dark,
+  onToggleTheme,
+}) {
   const rc = { admin: C.accent, manager: C.blue, salesperson: C.green }[
     user.role
   ];
@@ -2412,7 +2501,7 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
             alignItems: "center",
             justifyContent: "space-between",
             padding: "12px 16px",
-            background: "#fff",
+            background: C.cardBg,
             borderBottom: `1px solid ${C.border}`,
             backdropFilter: "blur(20px)",
           }}
@@ -2494,7 +2583,7 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
       <aside
         style={{
           width: mob ? "280px" : "232px",
-          background: "#fff",
+          background: C.cardBg,
           borderRight: mob ? "none" : `1px solid ${C.border}`,
           padding: "20px 14px",
           display: "flex",
@@ -2616,6 +2705,28 @@ function Shell({ user, onLogout, children, nav, active, setView }) {
               </div>
             </div>
           )}
+          <button
+            onClick={onToggleTheme}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: 8,
+              border: `1px solid ${C.border}`,
+              background: "transparent",
+              color: C.textMuted,
+              fontSize: 12,
+              cursor: "pointer",
+              fontFamily: "'Outfit',sans-serif",
+              marginBottom: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+            }}
+          >
+            {dark ? I.sun(C.textMuted, 14) : I.moon(C.textMuted, 14)}
+            {dark ? "Light Mode" : "Dark Mode"}
+          </button>
           <button
             onClick={onLogout}
             style={{
@@ -2912,7 +3023,7 @@ function InvView({ td }) {
               style={{
                 borderRadius: 16,
                 overflow: "hidden",
-                background: "#fff",
+                background: C.cardBg,
                 border: `1px solid ${C.border}`,
                 transition: "all 0.25s",
                 boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
@@ -3028,7 +3139,7 @@ function Contract({ vehicle, sigData }) {
   return (
     <div
       style={{
-        background: "#fff",
+        background: C.cardBg,
         color: "#111",
         borderRadius: 12,
         padding: "36px 32px",
@@ -3502,7 +3613,7 @@ function NewTD({ testDrives, setTestDrives, setAlerts }) {
               padding: "14px 16px",
               borderRadius: 12,
               border: `1px solid ${C.border}`,
-              background: "#fff",
+              background: C.cardBg,
               color: C.text,
               fontSize: 14,
               fontFamily: "'Outfit',sans-serif",
@@ -3664,7 +3775,7 @@ function PerformancePage({ td }) {
             padding: "8px 14px",
             borderRadius: 10,
             border: `1px solid ${C.border}`,
-            background: "#fff",
+            background: C.cardBg,
             color: C.text,
             fontSize: 13,
             fontFamily: "'Outfit',sans-serif",
@@ -4182,7 +4293,7 @@ function CommissionPage({ td, salesId }) {
             padding: "8px 14px",
             borderRadius: 10,
             border: `1px solid ${C.border}`,
-            background: "#fff",
+            background: C.cardBg,
             color: C.text,
             fontSize: 13,
             fontFamily: "'Outfit',sans-serif",
@@ -4333,7 +4444,16 @@ function CommissionPage({ td, salesId }) {
 }
 
 // ═══ PORTALS ═══
-function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
+function AdminPortal({
+  user,
+  onLogout,
+  td,
+  setTD,
+  alerts,
+  setAlerts,
+  dark,
+  onToggleTheme,
+}) {
   const [view, setView] = useState("dashboard");
   const currentMonth = getCurrentMonthKey();
   const [monthFilter, setMonthFilter] = useState(currentMonth);
@@ -4490,7 +4610,7 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
               padding: "8px 14px",
               borderRadius: 10,
               border: `1px solid ${C.border}`,
-              background: "#fff",
+              background: C.cardBg,
               color: C.text,
               fontSize: 13,
               fontFamily: "'Outfit',sans-serif",
@@ -4556,6 +4676,8 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
       nav={nav}
       active={view}
       setView={setView}
+      dark={dark}
+      onToggleTheme={onToggleTheme}
     >
       <AlertToast
         alerts={alerts}
@@ -4566,7 +4688,16 @@ function AdminPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
   );
 }
 
-function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
+function ManagerPortal({
+  user,
+  onLogout,
+  td,
+  setTD,
+  alerts,
+  setAlerts,
+  dark,
+  onToggleTheme,
+}) {
   const [view, setView] = useState("floor");
   const currentMonth = getCurrentMonthKey();
   const [monthFilter, setMonthFilter] = useState(currentMonth);
@@ -4673,7 +4804,7 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
               padding: "8px 14px",
               borderRadius: 10,
               border: `1px solid ${C.border}`,
-              background: "#fff",
+              background: C.cardBg,
               color: C.text,
               fontSize: 13,
               fontFamily: "'Outfit',sans-serif",
@@ -4726,6 +4857,8 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
       nav={nav}
       active={view}
       setView={setView}
+      dark={dark}
+      onToggleTheme={onToggleTheme}
     >
       <AlertToast
         alerts={alerts}
@@ -4736,7 +4869,16 @@ function ManagerPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
   );
 }
 
-function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
+function SalesPortal({
+  user,
+  onLogout,
+  td,
+  setTD,
+  alerts,
+  setAlerts,
+  dark,
+  onToggleTheme,
+}) {
   const [view, setView] = useState("dashboard");
   const currentMonth = getCurrentMonthKey();
   const [monthFilter, setMonthFilter] = useState(currentMonth);
@@ -4789,7 +4931,7 @@ function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
               padding: "8px 14px",
               borderRadius: 10,
               border: `1px solid ${C.border}`,
-              background: "#fff",
+              background: C.cardBg,
               color: C.text,
               fontSize: 13,
               fontFamily: "'Outfit',sans-serif",
@@ -5006,6 +5148,8 @@ function SalesPortal({ user, onLogout, td, setTD, alerts, setAlerts }) {
       nav={nav}
       active={view}
       setView={setView}
+      dark={dark}
+      onToggleTheme={onToggleTheme}
     >
       {content()}
     </Shell>
@@ -5033,6 +5177,24 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [td, setTD] = useState(() => genHistory());
   const [alerts, setAlerts] = useState([]);
+  const [dark, setDark] = useState(() => {
+    try {
+      return localStorage.getItem("tdp-theme") === "dark";
+    } catch {
+      return false;
+    }
+  });
+  const toggleTheme = () => {
+    setDark((prev) => {
+      const next = !prev;
+      applyTheme(next);
+      try {
+        localStorage.setItem("tdp-theme", next ? "dark" : "light");
+      } catch {}
+      return next;
+    });
+  };
+  applyTheme(dark);
   const login = (u) => {
     setUser(u);
     setPage("app");
@@ -5056,6 +5218,8 @@ export default function App() {
           setTD={setTD}
           alerts={alerts}
           setAlerts={setAlerts}
+          dark={dark}
+          onToggleTheme={toggleTheme}
         />
       ) : user?.role === "manager" ? (
         <ManagerPortal
@@ -5065,6 +5229,8 @@ export default function App() {
           setTD={setTD}
           alerts={alerts}
           setAlerts={setAlerts}
+          dark={dark}
+          onToggleTheme={toggleTheme}
         />
       ) : user?.role === "salesperson" ? (
         <SalesPortal
@@ -5074,6 +5240,8 @@ export default function App() {
           setTD={setTD}
           alerts={alerts}
           setAlerts={setAlerts}
+          dark={dark}
+          onToggleTheme={toggleTheme}
         />
       ) : null}
     </>
